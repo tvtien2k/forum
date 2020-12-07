@@ -1,4 +1,4 @@
-@extends('client.index')
+@extends('client1.index')
 
 @section('title', 'Page Title')
 

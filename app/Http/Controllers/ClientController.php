@@ -10,7 +10,7 @@ class ClientController extends Controller
 {
     public function getHome()
     {
-        return view('client.index');
+        return view('client1.index');
     }
 
     public function getPost(Request $request)
