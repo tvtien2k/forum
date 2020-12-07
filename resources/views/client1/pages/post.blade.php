@@ -220,7 +220,8 @@
 @section('js')
     <script src="assets_client/js/bundle.js"></script>
     <script src="ckeditor5/build/ckeditor.js"></script>
-    <script>ClassicEditor
+    <script>
+        ClassicEditor
             .create(document.querySelector('.editor'), {
 
                 toolbar: {

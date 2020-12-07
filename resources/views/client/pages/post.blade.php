@@ -47,20 +47,32 @@
                 <!-- Post Content -->
                 <div>{{$post->content}}</div>
                 <hr>
-                <div>
-                    <a class="btn" data-toggle="modal" data-target="#exampleModal" data-whatever="{{$post->id}}"
-                       href="#">
-                        Reply <span class="glyphicon glyphicon-chevron-down"></span>
-                    </a>
-                    <a class="btn pull-right" href="#">
-                        Report <span class="glyphicon glyphicon-flag"></span>
-                    </a>
-                </div>
-                <!-- Blog Comments -->
-                <!-- Comments Form -->
-                <hr>
-                <!-- Posted Comments -->
-                <!-- Comment -->
+                @auth
+                    <div>
+                        <a class="btn" data-toggle="modal" data-target="#reply" data-id="{{$post->id}}"
+                           data-author="{{$post->author->name}}" href="#">
+                            Reply <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                        <a class="btn pull-right" href="#">
+                            <span class="glyphicon glyphicon-flag"></span>
+                        </a>
+                    </div>
+                    <!-- Blog Comments -->
+                    <!-- Comments Form -->
+                    <hr>
+                @endauth
+            <!-- Posted Comments -->
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            <!-- Comment -->
                 @foreach($comments as $comment)
                     <div class="row-item row">
                         @php
@@ -74,56 +86,52 @@
                                      alt="">
                             </a>
                             <div class="media-body">
-                                <h5 class="media-heading">{{$comment->author->name}}
+                                <h4 class="media-heading">{{$comment->author->name}}
                                     <small>{{$comment->created_at}}</small>
-                                </h5>
+                                </h4>
                                 {{$comment->content}}
                             </div>
-                            <div class="media-bottom">
-                                <a class="btn btn-sm" data-toggle="modal" data-target="#exampleModal"
-                                   data-whatever="@mdo"
-                                   href="#">Reply <span class="glyphicon glyphicon-chevron-down"></span>
-                                </a>
-                                <a class="btn btn-sm pull-right" href="chitiet.html">Report <span
-                                        class="glyphicon glyphicon-flag"></span></a>
-                            </div>
+                            @auth
+                                <div class="media-bottom">
+                                    <a class="btn" data-toggle="modal" data-target="#reply" data-id="{{$comment->id}}"
+                                       data-author="{{$comment->author->name}}" href="#">
+                                        Reply <span class="glyphicon glyphicon-chevron-down"></span>
+                                    </a>
+                                    <a class="btn btn-sm pull-right" href="chitiet.html">
+                                        <span class="glyphicon glyphicon-flag"></span>
+                                    </a>
+                                </div>
+                            @endauth
                         </div>
                     </div>
                 @endforeach
             </div>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            <div class="modal fade" id="reply" tabindex="-1" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Reply</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="recipient-name"
-                                           class="col-form-label">Recipient:</label>
-                                    <input type="text" class="form-control" id="recipient-name">
-                                </div>
+                        <form method="post" action="member/post/comment">
+                            @csrf
+                            <div class="modal-body">
+                                <input class="id" type="hidden" name="id">
                                 <div class="well">
-                                    <h4>Viết bình luận ...<span class="glyphicon glyphicon-pencil"></span></h4>
-                                    <form role="form">
-                                        <div class="form-group">
-                                            <textarea class="form-control" rows="3"></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Gửi</button>
-                                    </form>
+                                    <h4>Comment ...<span class="glyphicon glyphicon-pencil"></span></h4>
+                                    <div class="form-group">
+                                        <textarea class="editor" name="_content"></textarea>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
-                            </button>
-                            <button type="button" class="btn btn-primary">Send message</button>
-                        </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -276,14 +284,73 @@
     <script src="assets_client/js/bootstrap.min.js"></script>
     <script src="assets_client/js/my.js"></script>
     <script>
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('whatever') // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        $('#reply').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var author = button.data('author')
             var modal = $(this)
-            modal.find('.modal-title').text('New message to ' + recipient)
-            modal.find('.modal-body input').val(recipient)
+            modal.find('.modal-title').text('Reply ' + author)
+            modal.find('input.id').val(id)
         })
+    </script>
+    <script src="ckeditor5/build/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('.editor'), {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'link',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'indent',
+                        'outdent',
+                        '|',
+                        'alignment',
+                        'insertTable',
+                        'blockQuote',
+                        'undo',
+                        'redo',
+                        '|',
+                        'mediaEmbed',
+                        'imageInsert',
+                        '|',
+                        'code',
+                        'codeBlock',
+                        '|',
+                        'htmlEmbed',
+                        'exportPdf'
+                    ]
+                },
+                language: 'en',
+                image: {
+                    toolbar: [
+                        'imageTextAlternative',
+                        'imageStyle:full',
+                        'imageStyle:side'
+                    ]
+                },
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells'
+                    ]
+                },
+                licenseKey: '',
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error('Oops, something went wrong!');
+                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                console.warn('Build id: t7ukt7v91nmd-3rq4gwmsanl7');
+                console.error(error);
+            });
     </script>
 @endsection

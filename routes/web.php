@@ -81,6 +81,7 @@ Route::prefix('member')->middleware('member')->group(function () {
         Route::get('/edit/{id}', [\App\Http\Controllers\Member\PostController::class, 'getEditPost']);
         Route::post('/edit', [\App\Http\Controllers\Member\PostController::class, 'postEditPost']);
         Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
+        Route::post('/comment', [\App\Http\Controllers\Member\PostController::class, 'postComment']);
     });
 });
 

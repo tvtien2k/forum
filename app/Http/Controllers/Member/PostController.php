@@ -35,6 +35,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'max:255',
             'slug' => 'unique:tbl_post|max:255',
+            '_content' => 'required',
         ]);
         $post = new Post();
         $post->author_id = Auth::user()->id;
@@ -96,6 +97,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'max:255',
             'slug' => 'max:255',
+            '_content' => 'required',
         ]);
         $post = Post::where([['id', '=', $request->id],
             ['author_id', '=', Auth::user()->id]
@@ -145,5 +147,28 @@ class PostController extends Controller
                 ['author_id', '=', Auth::user()->id]
             ])->first());
         return view('dashboard.pages.member.post.view', ['post' => $post]);
+    }
+
+    public function postComment(Request $request)
+    {
+        $request->validate([
+            '_content' => 'required',
+        ]);
+        $comment = Post::where('id', 'REGEXP', '^' . $request->id . '_[0-9]*$')->latest()->first();
+        if ($comment) {
+            $arr = explode('_', explode('-', $comment->id)[1]);
+            $index = (int)$arr[count($arr) - 1] + 1;
+            $id = $request->id . '_' . $index;
+        } else {
+            $id = $request->id . '_1';
+        }
+        $new_comment = new Post();
+        $new_comment->id = $id;
+        $new_comment->author_id = Auth::user()->id;
+        $new_comment->content = $request->_content;
+        $new_comment->is_post = false;
+        $new_comment->allow_comment = true;
+        $new_comment->save();
+        return back();
     }
 }
