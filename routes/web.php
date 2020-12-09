@@ -68,6 +68,7 @@ Route::prefix('ajax')->group(function () {
 Route::prefix('notice')->middleware('auth')->group(function () {
     Route::get('/add-post', [NoticeController::class, 'getAddPost']);
     Route::get('/update-post', [NoticeController::class, 'getUpdatePost']);
+    Route::get('/add-comment', [NoticeController::class, 'getAddComment']);
 });
 
 // member
@@ -83,6 +84,7 @@ Route::prefix('member')->middleware('member')->group(function () {
         Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
         Route::post('/comment', [\App\Http\Controllers\Member\PostController::class, 'postComment']);
     });
+    Route::get('/notice', [\App\Http\Controllers\Member\NoticeController::class, 'getNotice']);
 });
 
 // mod

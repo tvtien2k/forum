@@ -1,6 +1,6 @@
 @extends('dashboard.index')
 
-@section('title', 'Create Post')
+@section('title', 'Edit Post')
 
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">

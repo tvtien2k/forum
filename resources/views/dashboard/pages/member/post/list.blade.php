@@ -1,6 +1,6 @@
 @extends('dashboard.index')
 
-@section('title', 'Create Post')
+@section('title', 'List Post')
 
 @section('style')
     <!-- Bootstrap Core CSS -->

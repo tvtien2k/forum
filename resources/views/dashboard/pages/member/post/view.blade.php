@@ -1,6 +1,6 @@
 @extends('client1.index')
 
-@section('title', 'Page Title')
+@section('title', 'View Post')
 
 @section('style')
     <link rel="stylesheet" href="assets_client/css/style.css">

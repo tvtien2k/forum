@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\InsertDataController;
-use App\Models\Category;
 use App\Models\Notice;
 use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Mockery\Matcher\Not;
 
 class PostController extends Controller
 {
@@ -42,7 +39,7 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->title = $request->title;
         $post->slug = $request->slug;
-        $post_latest = Post::latest()->first();
+        $post_latest = Post::where('is_post', '=', true)->latest()->first();
         if ($post_latest) {
             $index = (int)explode('-', $post_latest->id)[1] + 1;
             $post_id = $this->to_id($post->slug) . '-' . $index;
@@ -154,9 +151,10 @@ class PostController extends Controller
         $request->validate([
             '_content' => 'required',
         ]);
-        $comment = Post::where('id', 'REGEXP', '^' . $request->id . '_[0-9]*$')->latest()->first();
-        if ($comment) {
-            $arr = explode('_', explode('-', $comment->id)[1]);
+        $parent_comment = Post::find($request->id);
+        $latest_comment = Post::where('id', 'REGEXP', '^' . $request->id . '_[0-9]*$')->latest()->first();
+        if ($latest_comment) {
+            $arr = explode('_', explode('-', $latest_comment->id)[1]);
             $index = (int)$arr[count($arr) - 1] + 1;
             $id = $request->id . '_' . $index;
         } else {
@@ -169,6 +167,6 @@ class PostController extends Controller
         $new_comment->is_post = false;
         $new_comment->allow_comment = true;
         $new_comment->save();
-        return back();
+        return redirect('notice/add-comment')->with(['parent_comment' => $parent_comment->id, 'new_comment' => $new_comment->id]);
     }
 }
