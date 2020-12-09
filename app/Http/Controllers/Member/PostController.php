@@ -135,7 +135,10 @@ class PostController extends Controller
             where([['id', '=', $request->id],
                 ['author_id', '=', Auth::user()->id]
             ])->first());
-        return view('dashboard.pages.member.post.view', ['post' => $post]);
+        if ($post) {
+            return view('dashboard.pages.member.post.view', ['post' => $post]);
+        }
+        return redirect('/home');
     }
 
     public function postComment(Request $request)
