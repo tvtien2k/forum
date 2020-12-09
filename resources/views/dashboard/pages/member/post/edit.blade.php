@@ -276,7 +276,6 @@
 
         $(document).ready(function ($) {
             ChangeToSlug();
-            getCategory();
         });
     </script>
 @endsection

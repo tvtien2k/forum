@@ -38,17 +38,11 @@ class InsertDataController extends Controller
     public function insertTopic()
     {
         $faker = Factory::create();
-        for ($i = 0; $i < 5; $i++) {
-            $name = $faker->sentence(2);
+        for ($i = 1; $i < 6; $i++) {
+            $name = $faker->sentence(1);
             $slug = $this->to_slug($name);
-            $topic_latest = Topic::latest()->first();
-            if ($topic_latest) {
-                $index = (int)explode('-', $topic_latest->id)[1] + 1;
-                $id = $this->to_id($slug) . '-' . $index;
-            } else {
-                $id = $this->to_id($slug) . '-1';
-            }
-            $mod_id = $faker->numberBetween(1, 100);
+            $id = $this->to_id($slug) . '-' . $i;
+            $mod_id = $faker->numberBetween(2, 3);
             $topic = new Topic();
             $topic->id = $id;
             $topic->name = $name;
@@ -62,16 +56,10 @@ class InsertDataController extends Controller
     public function insertCategory()
     {
         $faker = Factory::create();
-        for ($i = 0; $i < 20; $i++) {
-            $name = $faker->sentence(3);
+        for ($i = 1; $i < 21; $i++) {
+            $name = $faker->sentence(2);
             $slug = $this->to_slug($name);
-            $cate_latest = Category::latest()->first();
-            if ($cate_latest) {
-                $index = (int)explode('-', $cate_latest->id)[1] + 1;
-                $id = $this->to_id($slug) . '-' . $index;
-            } else {
-                $id = $this->to_id($slug) . '-1';
-            }
+            $id = $this->to_id($slug) . '-' . $i;
             $topics = Topic::all();
             $arr_topic_id = [];
             foreach ($topics as $topic) {
@@ -84,24 +72,18 @@ class InsertDataController extends Controller
             $cate->slug = $slug;
             $cate->topic_id = $topic_id;
             $cate->save();
-            sleep(1);
+            sleep(2);
         }
     }
 
     public function insertPost()
     {
         $faker = Factory::create();
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 1; $i < 51; $i++) {
             $title = $faker->sentence;
             $slug = $this->to_slug($title);
-            $post_latest = Post::latest()->first();
-            if ($post_latest) {
-                $index = (int)explode('-', $post_latest->id)[1] + 1;
-                $id = $this->to_id($slug) . '-' . $index;
-            } else {
-                $id = $this->to_id($slug) . '-1';
-            }
-            $author_id = $faker->numberBetween(1, 100);
+            $id = $this->to_id($slug) . '-' . $i;
+            $author_id = $faker->numberBetween(4, 6);
             $categories = Category::all();
             $arr_categories_id = [];
             foreach ($categories as $category) {
@@ -123,7 +105,7 @@ class InsertDataController extends Controller
             $post->is_post = $is_post;
             $post->allow_comment = $allow_comment;
             $post->save();
-            sleep(1);
+            sleep(2);
         }
     }
 }

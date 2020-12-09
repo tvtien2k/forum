@@ -109,7 +109,7 @@ class PostController extends Controller
         } elseif ($post->status == 'display') {
             $post->status = 'update';
             $post->save();
-            $post_update = new Post();
+            $post_update = Post::find($post->id . '_UPDATE') ?? new Post();
             $post_update->id = $request->id . '_UPDATE';
             $post_update->author_id = Auth::user()->id;
             $post_update->category_id = $request->category_id;
@@ -118,14 +118,6 @@ class PostController extends Controller
             $post_update->content = $request->_content;
             $post_update->status = 'approval';
             $post_update->is_post = false;
-            $post_update->allow_comment = $request->allow_comment;
-            $post_update->save();
-        } elseif ($post->status == 'update') {
-            $post_update = Post::find($post->id . '_UPDATE');
-            $post_update->category_id = $request->category_id;
-            $post_update->title = $request->title;
-            $post_update->slug = $request->slug;
-            $post_update->content = $request->_content;
             $post_update->allow_comment = $request->allow_comment;
             $post_update->save();
         } else {
