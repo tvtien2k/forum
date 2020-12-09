@@ -84,7 +84,12 @@ Route::prefix('member')->middleware('member')->group(function () {
         Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
         Route::post('/comment', [\App\Http\Controllers\Member\PostController::class, 'postComment']);
     });
-    Route::get('/notice', [\App\Http\Controllers\Member\NoticeController::class, 'getNotice']);
+    Route::prefix('/notice')->group(function () {
+        Route::get('/list', [\App\Http\Controllers\Member\NoticeController::class, 'getNotice']);
+        Route::get('/update-status/{id}', [\App\Http\Controllers\Member\NoticeController::class, 'getRedirectNotice']);
+        Route::get('/all', [\App\Http\Controllers\Member\NoticeController::class, 'getMarkSeen']);
+    });
+
 });
 
 // mod

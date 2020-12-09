@@ -1,6 +1,8 @@
 @extends('client.index')
 
-@section('title', 'Page Title')
+@section('title')
+    {{$post->title}}
+@endsection
 
 @section('style')
     <!-- Bootstrap Core CSS -->
@@ -139,7 +141,7 @@
             <div class="col-md-3">
 
                 <div class="panel panel-default">
-                    <div class="panel-heading"><b>Tin liên quan</b></div>
+                    <div class="panel-heading"><b>Post related</b></div>
                     <div class="panel-body">
 
                         <!-- item -->

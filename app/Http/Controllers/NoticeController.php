@@ -61,7 +61,7 @@ class NoticeController extends Controller
                 var_dump($notice->id);
                 $notice->post_id = $post->id;
                 $notice->user_id = $post->author_id;
-                $notice->content = Auth::user()->name . " commented on your " . $post->title . " post";
+                $notice->content = Auth::user()->name . ' commented on your "' . $post->title . '" post';
                 $notice->link = "post/" . $post->slug;
                 $notice->status = 'Not seen';
                 $notice->save();
@@ -72,7 +72,7 @@ class NoticeController extends Controller
                 $notice->id = $post->id . '-' . $post->author_id . '-' . $this->getIndexId();
                 $notice->post_id = $post->id;
                 $notice->user_id = $post->author_id;
-                $notice->content = Auth::user()->name . " commented on your " . $post->title . " post";
+                $notice->content = Auth::user()->name . ' commented on your "' . $post->title . '" post';
                 $notice->link = "post/" . $post->slug;
                 $notice->status = 'Not seen';
                 $notice->save();

@@ -28,7 +28,7 @@
                 <!-- /.nav-second-level -->
             </li>
             <li>
-                <a href="member/notice"><i class="fa fa-bell-o fa-fw"></i> Notice</a>
+                <a href="member/notice/list"><i class="fa fa-bell-o fa-fw"></i> Notice</a>
             </li>
             <li>
                 <a href="#"><i class="fa fa-user fa-fw"></i> Account Settings<span class="fa arrow"></span></a>

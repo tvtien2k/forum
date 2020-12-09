@@ -120,8 +120,6 @@ class PostController extends Controller
             $post_update->is_post = false;
             $post_update->allow_comment = $request->allow_comment;
             $post_update->save();
-        } else {
-            return back();
         }
         return redirect('notice/update-post')->with(['id' => $post->id]);
     }

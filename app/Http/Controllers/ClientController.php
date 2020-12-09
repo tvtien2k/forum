@@ -20,7 +20,7 @@ class ClientController extends Controller
             ['status', '<>', 'approval']
         ])->first());
         if (!$post) {
-            return back();
+            return abort(404);
         }
         $comments = Post::
         where([['id', 'like', $post->id . '_%'],
