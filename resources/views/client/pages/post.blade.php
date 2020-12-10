@@ -55,7 +55,8 @@
                            data-author="{{$post->author->name}}" href="#">
                             Reply <span class="glyphicon glyphicon-chevron-down"></span>
                         </a>
-                        <a class="btn pull-right" href="#">
+                        <a class="btn pull-right" data-toggle="modal" data-target="#report" data-id="{{$post->id}}"
+                           data-author="{{$post->author->name}}" href="#">
                             <span class="glyphicon glyphicon-flag"></span>
                         </a>
                     </div>
@@ -81,7 +82,7 @@
                             $level = count(explode('_', explode('-', $comment->id)[1])) - 2;
                         @endphp
                         <div class="col-md-{{$level}}"></div>
-                        <div class="media col-md-{{12-$level}} border-left">
+                        <div class="media col-md-{{12-$level}} border-left" id="{{$comment->id}}">
                             <a class="pull-left" href="#">
                                 <img class="media-object"
                                      src="https://ui-avatars.com/api/?size=64&name={{substr($comment->author->name, 0, 1)}}"
@@ -99,7 +100,8 @@
                                        data-author="{{$comment->author->name}}" href="#">
                                         Reply <span class="glyphicon glyphicon-chevron-down"></span>
                                     </a>
-                                    <a class="btn btn-sm pull-right" href="chitiet.html">
+                                    <a class="btn pull-right" data-toggle="modal" data-target="#report" data-id="{{$comment->id}}"
+                                       data-author="{{$comment->author->name}}" href="#">
                                         <span class="glyphicon glyphicon-flag"></span>
                                     </a>
                                 </div>
@@ -137,143 +139,82 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="report" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Reply</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post" action="member/report/add">
+                            @csrf
+                            <div class="modal-body">
+                                <input class="id" type="hidden" name="id">
+                                <div class="well">
+                                    <h4>Content report ...<span class="glyphicon glyphicon-pencil"></span></h4>
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="_content" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-3">
-
                 <div class="panel panel-default">
-                    <div class="panel-heading"><b>Post related</b></div>
+                    <div class="panel-heading"><b>Related posts</b></div>
                     <div class="panel-body">
-
+                    @foreach($related_posts as $post)
                         <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-4">
+                                    <a href="post/{{$post->slug}}">
+                                        <img class="img-responsive"
+                                             src="https://ui-avatars.com/api/?size=64&name={{substr($post->author->name, 0, 1)}}"
+                                             alt="">
+                                    </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <a href="post/{{$post->slug}}"><b>{{$post->title}}</b></a>
+                                </div>
+                                <div class="break"></div>
                             </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
-
-                        <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
-
-                        <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
-
-                        <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
+                            <!-- end item -->
+                        @endforeach
                     </div>
                 </div>
-
                 <div class="panel panel-default">
-                    <div class="panel-heading"><b>Tin nổi bật</b></div>
+                    <div class="panel-heading"><b>New Posts</b></div>
                     <div class="panel-body">
-
+                    @foreach($new_posts as $post)
                         <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-4">
+                                    <a href="post/{{$post->slug}}">
+                                        <img class="img-responsive"
+                                             src="https://ui-avatars.com/api/?size=64&name={{substr($post->author->name, 0, 1)}}"
+                                             alt="">
+                                    </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <a href="post/{{$post->slug}}"><b>{{$post->title}}</b></a>
+                                </div>
+                                <div class="break"></div>
                             </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
-
-                        <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
-
-                        <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
-
-                        <!-- item -->
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-5">
-                                <a href="detail.html">
-                                    <img class="img-responsive" src="image/320x150.png" alt="">
-                                </a>
-                            </div>
-                            <div class="col-md-7">
-                                <a href="#"><b>Project Five</b></a>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                            <div class="break"></div>
-                        </div>
-                        <!-- end item -->
+                            <!-- end item -->
+                        @endforeach
                     </div>
                 </div>
-
             </div>
-
         </div>
         <!-- /.row -->
     </div>
@@ -292,6 +233,14 @@
             var author = button.data('author')
             var modal = $(this)
             modal.find('.modal-title').text('Reply ' + author)
+            modal.find('input.id').val(id)
+        })
+        $('#report').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var author = button.data('author')
+            var modal = $(this)
+            modal.find('.modal-title').text('Report ' + author)
             modal.find('input.id').val(id)
         })
     </script>

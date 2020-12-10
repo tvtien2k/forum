@@ -69,6 +69,7 @@ Route::prefix('notice')->middleware('auth')->group(function () {
     Route::get('/add-post', [NoticeController::class, 'getAddPost']);
     Route::get('/update-post', [NoticeController::class, 'getUpdatePost']);
     Route::get('/add-comment', [NoticeController::class, 'getAddComment']);
+    Route::get('/add-report', [NoticeController::class, 'getAddReport']);
 });
 
 // member
@@ -89,7 +90,9 @@ Route::prefix('member')->middleware('member')->group(function () {
         Route::get('/update-status/{id}', [\App\Http\Controllers\Member\NoticeController::class, 'getRedirectNotice']);
         Route::get('/all', [\App\Http\Controllers\Member\NoticeController::class, 'getMarkSeen']);
     });
-
+    Route::prefix('/report')->group(function () {
+        Route::post('/add', [\App\Http\Controllers\Member\ReportController::class, 'postAddReport']);
+    });
 });
 
 // mod
