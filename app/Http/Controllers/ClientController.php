@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,7 +11,9 @@ class ClientController extends Controller
 {
     public function getHome()
     {
-        return view('client1.index');
+        $topics = Topic::all();
+        $posts = Post::where('status', '=', 'display')->latest()->take(6)->get();
+        return view('client.pages.home', ['topics' => $topics, 'posts' => $posts]);
     }
 
     public function getPost(Request $request)
