@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
@@ -47,15 +48,27 @@ class ClientController extends Controller
     public function getTopic(Request $request)
     {
         $topics = Topic::all();
-        $topic = Topic::where('slug', '=', $request->slug)->first();
+        $topic = Topic::where('slug', '=', $request->topic_slug)->first();
         if (!$topic) {
             return abort(404);
         }
         $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
             ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
-            ->where([['tbl_topic.slug', '=', $request->slug], ['tbl_post.status', '=', 'display']])
+            ->where([['tbl_topic.slug', '=', $request->topic_slug], ['tbl_post.status', '=', 'display']])
+            ->select('tbl_post.*')
             ->orderBy('tbl_post.created_at', 'desc')
             ->paginate(10);
         return view('client.pages.topic', ['topics' => $topics, 'topic' => $topic, 'posts' => $posts]);
+    }
+
+    public function getCategory(Request $request)
+    {
+        $topics = Topic::all();
+        $category = Category::where('slug', '=', $request->category_slug)->first();
+        if (!$category) {
+            return abort(404);
+        }
+        $posts = Post::where('category_id', '=', $category->id)->paginate(10);
+        return view('client.pages.category', ['topics' => $topics, 'category' => $category, 'posts' => $posts]);
     }
 }

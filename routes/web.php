@@ -48,7 +48,8 @@ Route::get('/', [ClientController::class, 'getHome']);
 Route::get('/home', [ClientController::class, 'getHome']);
 Route::get('/post/{slug}', [ClientController::class, 'getPost']);
 Route::get('/posts/new', [ClientController::class, 'getNewPosts']);
-Route::get('/topic/{slug}', [ClientController::class, 'getTopic']);
+Route::get('/topic/{topic_slug}', [ClientController::class, 'getTopic']);
+Route::get('/category/{category_slug}', [ClientController::class, 'getCategory']);
 
 /*
 // insert data

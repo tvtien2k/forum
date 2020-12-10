@@ -1,7 +1,7 @@
 @extends('client.index')
 
 @section('title')
-    {{$topic->name}}
+    {{$category->name}}
 @endsection
 
 @section('style')
@@ -58,6 +58,7 @@
                                             View detail <span class="glyphicon glyphicon-chevron-right"></span>
                                         </a>
                                     </div>
+
                                 </div>
                                 <div class="break"></div>
                             </div>

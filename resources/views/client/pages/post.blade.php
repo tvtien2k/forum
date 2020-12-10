@@ -43,8 +43,23 @@
                         </p>
                     </div>
                 </div>
-                <!-- Date/Time -->
-                <p><span class="glyphicon glyphicon-time"></span> Posted at {{$post->created_at}}</p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>
+                            <a href="topic/{{$post->category->topic->slug}}">
+                                {{$post->category->topic->name}}
+                            </a> |
+                            <small>
+                                <a href="category/{{$post->category->slug}}">
+                                    <i>{{$post->category->name}}</i>
+                                </a>/
+                            </small>
+                        </h4>
+                    </div>
+                    <div class="col-md-pull-4">
+                        <p><span class="glyphicon glyphicon-time"></span> Posted at {{$post->created_at}}</p>
+                    </div>
+                </div>
                 <hr>
                 <!-- Post Content -->
                 <div>{{$post->content}}</div>
@@ -100,7 +115,8 @@
                                        data-author="{{$comment->author->name}}" href="#">
                                         Reply <span class="glyphicon glyphicon-chevron-down"></span>
                                     </a>
-                                    <a class="btn pull-right" data-toggle="modal" data-target="#report" data-id="{{$comment->id}}"
+                                    <a class="btn pull-right" data-toggle="modal" data-target="#report"
+                                       data-id="{{$comment->id}}"
                                        data-author="{{$comment->author->name}}" href="#">
                                         <span class="glyphicon glyphicon-flag"></span>
                                     </a>
