@@ -44,11 +44,11 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::get('redirect', [RedirectController::class, 'redirectLogin']);
 
 // client
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ClientController::class, 'getHome']);
 Route::get('/home', [ClientController::class, 'getHome']);
 Route::get('/post/{slug}', [ClientController::class, 'getPost']);
+Route::get('/posts/new', [ClientController::class, 'getNewPosts']);
+Route::get('/topic/{slug}', [ClientController::class, 'getTopic']);
 
 /*
 // insert data

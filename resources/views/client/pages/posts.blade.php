@@ -1,6 +1,6 @@
 @extends('client.index')
 
-@section('title','Home')
+@section('title','New Posts')
 
 @section('style')
     <!-- Bootstrap Core CSS -->
@@ -20,8 +20,6 @@
 
 @section('content')
     <div class="container">
-        @include('client.layouts.slider')
-        <div class="space20"></div>
         <div class="row main-left">
             <div class="col-md-3 ">
                 @include('client.layouts.menu')
@@ -65,6 +63,7 @@
                         @endforeach
                     </div>
                 </div>
+                {{ $posts->links() }}
             </div>
         </div>
         <!-- /.row -->
