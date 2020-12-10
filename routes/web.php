@@ -50,6 +50,7 @@ Route::get('/post/{slug}', [ClientController::class, 'getPost']);
 Route::get('/posts/new', [ClientController::class, 'getNewPosts']);
 Route::get('/topic/{topic_slug}', [ClientController::class, 'getTopic']);
 Route::get('/category/{category_slug}', [ClientController::class, 'getCategory']);
+Route::get('/search', [ClientController::class, 'getSearch']);
 
 /*
 // insert data
@@ -63,6 +64,7 @@ Route::prefix('insert')->group(function () {
 // ajax
 Route::prefix('ajax')->group(function () {
     Route::get('/getCategory/{topic_id}', [AjaxController::class, 'getCategory']);
+    Route::get('/getPost/{key}', [AjaxController::class, 'getPost']);
 });
 
 // notice

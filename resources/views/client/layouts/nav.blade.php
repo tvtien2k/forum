@@ -18,12 +18,7 @@
                     <a href="posts/new">New Posts</a>
                 </li>
             </ul>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
+            @include('client.layouts.search')
             <ul class="nav navbar-nav pull-right">
                 @auth
                     <li>

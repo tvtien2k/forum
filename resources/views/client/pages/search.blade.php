@@ -1,7 +1,7 @@
 @extends('client.index')
 
 @section('title')
-    {{$category->name}}
+    Search: {{$key}}
 @endsection
 
 @section('style')
@@ -29,7 +29,7 @@
             <div class="col-md-9">
                 <div class="panel panel-default">
                     <div class="panel-heading" style="background-color:#337AB7; color:white;">
-                        <h2 style="margin-top:0px; margin-bottom:0px;"> Category: {{$category->name}}</h2>
+                        <h2 style="margin-top:0px; margin-bottom:0px;"> Search: {{$key}}</h2>
                     </div>
                     <div class="panel-body">
                         @foreach($posts as $post)

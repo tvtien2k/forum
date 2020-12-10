@@ -68,7 +68,15 @@ class ClientController extends Controller
         if (!$category) {
             return abort(404);
         }
-        $posts = Post::where('category_id', '=', $category->id)->paginate(10);
+        $posts = Post::where('category_id', '=', $category->id)->latest()->paginate(10);
         return view('client.pages.category', ['topics' => $topics, 'category' => $category, 'posts' => $posts]);
+    }
+
+    public function getSearch(Request $request)
+    {
+        $topics = Topic::all();
+        $posts = Post::where([['title', 'like', '%' . $request->key . '%'], ['status', '=', 'display']])
+            ->latest()->paginate(10)->withQueryString();
+        return view('client.pages.search', ['topics' => $topics, 'key' => $request->key, 'posts' => $posts]);
     }
 }
