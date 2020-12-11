@@ -25,28 +25,32 @@ class NoticeController extends Controller
     public function getAddPost(Request $request)
     {
         $post = Post::find(session('id'));
-        $notice = new Notice();
-        $notice->id = $post->id . '-' . $post->category->topic->mod->id . '-' . $this->getIndexId();
-        $notice->post_id = $post->id;
-        $notice->user_id = $post->category->topic->mod->id;
-        $notice->content = Auth::user()->name . " has created a new post that requires your approval";
-        $notice->link = "mod/post/approval/" . $post->id;
-        $notice->status = 'Not seen';
-        $notice->save();
+        if (!$post->author == $post->category->topic->mod->id) {
+            $notice = new Notice();
+            $notice->id = $post->id . '-' . $post->category->topic->mod->id . '-' . $this->getIndexId();
+            $notice->post_id = $post->id;
+            $notice->user_id = $post->category->topic->mod->id;
+            $notice->content = Auth::user()->name . " has created a new post that requires your approval";
+            $notice->link = "mod/post/approval/" . $post->id;
+            $notice->status = 'Not seen';
+            $notice->save();
+        }
         return redirect('member/post/list')->with('status', 'Create successful posts! We need some time to review your post.');
     }
 
     public function getUpdatePost()
     {
         $post = Post::find(session('id'));
-        $notice = new Notice();
-        $notice->id = $post->id . '-' . $post->category->topic->mod->id . '-' . $this->getIndexId();
-        $notice->post_id = $post->id;
-        $notice->user_id = $post->category->topic->mod->id;
-        $notice->content = Auth::user()->name . " has update a post that requires your approval";
-        $notice->link = "mod/post/approval/" . $post->id;
-        $notice->status = 'Not seen';
-        $notice->save();
+        if (!$post->author == $post->category->topic->mod->id) {
+            $notice = new Notice();
+            $notice->id = $post->id . '-' . $post->category->topic->mod->id . '-' . $this->getIndexId();
+            $notice->post_id = $post->id;
+            $notice->user_id = $post->category->topic->mod->id;
+            $notice->content = Auth::user()->name . " has update a post that requires your approval";
+            $notice->link = "mod/post/approval/" . $post->id;
+            $notice->status = 'Not seen';
+            $notice->save();
+        }
         return redirect('member/post/edit/' . $post->id)->with('status', 'Edit successfully!');
     }
 
@@ -100,18 +104,20 @@ class NoticeController extends Controller
         $post = Post::find($post_id);
         $admins = User::where('level', '=', 2)->get();
         foreach ($admins as $admin) {
-            $notice = new Notice();
-            $notice->id = $report->post_id . '-' . $admin->id . '-' . $this->getIndexId();
-            $notice->post_id = $report->post_id;
-            $notice->user_id = $admin->id;
-            if ($report->post_id == $post_id) {
-                $notice->content = Auth::user()->name . ' has just reported on a post titled ' . $post->name;
-            } else {
-                $notice->content = Auth::user()->name . ' has just reported on a comment on a post titled ' . $post->name;
-                $notice->link = "post/" . $post->slug . '#' . $report->post_id;
+            if (!$report->user_id == $admin->id) {
+                $notice = new Notice();
+                $notice->id = $report->post_id . '-' . $admin->id . '-' . $this->getIndexId();
+                $notice->post_id = $report->post_id;
+                $notice->user_id = $admin->id;
+                if ($report->post_id == $post_id) {
+                    $notice->content = Auth::user()->name . ' has just reported on a post titled ' . $post->name;
+                } else {
+                    $notice->content = Auth::user()->name . ' has just reported on a comment on a post titled ' . $post->name;
+                    $notice->link = "post/" . $post->slug . '#' . $report->post_id;
+                }
+                $notice->status = 'Not seen';
+                $notice->save();
             }
-            $notice->status = 'Not seen';
-            $notice->save();
         }
         if ($report->post_id == $post_id) {
             return redirect('post/' . $post->slug);

@@ -1,8 +1,6 @@
 @extends('client.index')
 
-@section('title')
-    Search: {{$key}}
-@endsection
+@section('title','New Posts')
 
 @section('style')
     <!-- Bootstrap Core CSS -->
@@ -29,7 +27,29 @@
             <div class="col-md-9">
                 <div class="panel panel-default">
                     <div class="panel-heading" style="background-color:#337AB7; color:white;">
-                        <h2 style="margin-top:0px; margin-bottom:0px;"> Search: {{$key}}</h2>
+                        <h2 style="margin-top:0px; margin-bottom:0px;">Personal information</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-4">
+                            <img class="img-responsive"
+                                 src="https://ui-avatars.com/api/?size=300&name={{substr($user->name, 0, 1)}}"
+                                 alt="">
+                        </div>
+                        <div class="col-md-8">
+                            <h3><span class="glyphicon glyphicon-align-left"></span> {{$user->name}}</h3>
+                            <div class="break"></div>
+                            <h4><span class="glyphicon glyphicon-envelope"></span> Email : </h4>
+                            <p>{{$user->email}}</p>
+                            <h4><span class="glyphicon glyphicon-user"></span> Gender : </h4>
+                            <p>{{$user->gender}}</p>
+                            <h4><span class="glyphicon glyphicon-info-sign"></span> Description : </h4>
+                            <p>{{$user->description}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color:#337AB7; color:white;">
+                        <h2 style="margin-top:0px; margin-bottom:0px;"> Posts by {{$user->name}}</h2>
                     </div>
                     <div class="panel-body">
                         @foreach($posts as $post)
@@ -46,7 +66,7 @@
                                 </h3>
                                 <div class="col-md-12 border-right">
                                     <div class="col-md-2">
-                                        <a href="user/{{$post->author_id}}">
+                                        <a href="post/{{$post->slug}}">
                                             <img class="img-responsive"
                                                  src="https://ui-avatars.com/api/?size=100&name={{substr($post->author->name, 0, 1)}}"
                                                  alt="">

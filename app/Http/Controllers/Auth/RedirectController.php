@@ -25,13 +25,13 @@ class RedirectController extends Controller
     public function getMemberDashboard()
     {
         $count_notice = Notice::where([['user_id', '=', Auth::id()], ['status', '=', 'Not seen']])
-            ->count();
+                ->count() ?? 0;
         $count_all_post = Post::where([['author_id', '=', Auth::id()], ['is_post', '=', 1]])
-            ->count();
+                ->count() ?? 0;
         $count_display_post = Post::where([['author_id', '=', Auth::id()], ['is_post', '=', 1], ['status', '=', 'display']])
-            ->count();
+                ->count() ?? 0;
         $count_approval_post = Post::where([['author_id', '=', Auth::id()], ['is_post', '=', 1], ['status', '=', 'approval']])
-            ->count();
+                ->count() ?? 0;
         $notices = Notice::where([['user_id', '=', Auth::id()], ['status', '=', 'Not seen']])
             ->take(5)->get();
         return view('dashboard.pages.member.dashboard',

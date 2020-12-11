@@ -28,7 +28,7 @@
                 <!-- Blog Post -->
                 <div class="col-md-12">
                     <div class="col-md-2">
-                        <a href="#">
+                        <a href="user/{{$post->author_id}}">
                             <img class="img-responsive"
                                  src="https://ui-avatars.com/api/?size=128&name={{substr($post->author->name, 0, 1)}}"
                                  alt="">
@@ -39,7 +39,7 @@
                         <h1>{{$post->title}}</h1>
                         <!-- Author -->
                         <p class="lead">
-                            by <a href="#">{{$post->author->name}}</a>
+                            by <a href="user/{{$post->author_id}}">{{$post->author->name}}</a>
                         </p>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                         @endphp
                         <div class="col-md-{{$level}}"></div>
                         <div class="media col-md-{{12-$level}} border-left" id="{{$comment->id}}">
-                            <a class="pull-left" href="#">
+                            <a class="pull-left" href="user/{{$comment->author_id}}">
                                 <img class="media-object"
                                      src="https://ui-avatars.com/api/?size=64&name={{substr($comment->author->name, 0, 1)}}"
                                      alt="">

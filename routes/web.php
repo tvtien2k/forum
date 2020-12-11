@@ -51,6 +51,7 @@ Route::get('/post/{slug}', [ClientController::class, 'getPost']);
 Route::get('/posts/new', [ClientController::class, 'getNewPosts']);
 Route::get('/topic/{topic_slug}', [ClientController::class, 'getTopic']);
 Route::get('/category/{category_slug}', [ClientController::class, 'getCategory']);
+Route::get('/user/{id}', [ClientController::class, 'getUser']);
 Route::get('/search', [ClientController::class, 'getSearch']);
 
 /*

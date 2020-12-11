@@ -44,7 +44,7 @@
                                 </h3>
                                 <div class="col-md-12 border-right">
                                     <div class="col-md-2">
-                                        <a href="post/{{$post->slug}}">
+                                        <a href="user/{{$post->author_id}}">
                                             <img class="img-responsive"
                                                  src="https://ui-avatars.com/api/?size=100&name={{substr($post->author->name, 0, 1)}}"
                                                  alt="">

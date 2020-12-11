@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Topic;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -78,5 +79,14 @@ class ClientController extends Controller
         $posts = Post::where([['title', 'like', '%' . $request->key . '%'], ['status', '=', 'display']])
             ->latest()->paginate(10)->withQueryString();
         return view('client.pages.search', ['topics' => $topics, 'key' => $request->key, 'posts' => $posts]);
+    }
+
+    public function getUser(Request $request)
+    {
+        $topics = Topic::all();
+        $user = User::find($request->id);
+        $posts = Post::where([['author_id', '=', $user->id], ['status', '=', 'display']])
+            ->latest()->paginate(6);
+        return view('client.pages.user', ['topics' => $topics, 'user' => $user, 'posts' => $posts]);
     }
 }
