@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {
@@ -23,5 +24,33 @@ class AccountController extends Controller
         $user->description = $request->description;
         $user->save();
         return back();
+    }
+
+    public function getSecurity()
+    {
+        return view('dashboard.pages.member.account.security');
+    }
+
+    public function getForgotPassword()
+    {
+        Auth::logout();
+        return redirect('forgot-password');
+    }
+
+    public function postChangePassword(Request $request)
+    {
+        $request->validate([
+            'new_pass' => 'min:8',
+        ]);
+        $user = User::find(Auth::id());
+        if (!Hash::check($request->old_pass, $user->password)) {
+            return back()->withErrors('Old password is incorrect');
+        } elseif ($request->new_pass != $request->re_pass) {
+            return back()->withErrors('Password confirmation is incorrect');
+        }
+        $user->password = Hash::make($request->new_pass);
+        $user->save();
+        Auth::login($user);
+        return back()->with('status', 'Password changed successfully!');
     }
 }

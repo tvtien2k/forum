@@ -19,12 +19,12 @@ use App\Http\Controllers\NoticeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*
+
 // auth and verified
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
-*/
+
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware(['auth'])->name('verification.notice');
@@ -100,6 +100,9 @@ Route::prefix('member')->middleware('member')->group(function () {
     Route::prefix('/account')->group(function () {
         Route::get('/profile', [\App\Http\Controllers\Member\AccountController::class, 'getProfile']);
         Route::post('/profile', [\App\Http\Controllers\Member\AccountController::class, 'postProfile']);
+        Route::get('/security', [\App\Http\Controllers\Member\AccountController::class, 'getSecurity']);
+        Route::get('/forgot-password', [\App\Http\Controllers\Member\AccountController::class, 'getForgotPassword']);
+        Route::post('/change-password', [\App\Http\Controllers\Member\AccountController::class, 'postChangePassword']);
     });
 });
 
