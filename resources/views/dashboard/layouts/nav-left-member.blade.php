@@ -31,13 +31,13 @@
                 <a href="member/notice/list"><i class="fa fa-bell-o fa-fw"></i> Notice</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-user fa-fw"></i> Account Settings<span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-user fa-fw"></i> Account<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="#">Account Information</a>
+                        <a href="member/account/profile">User Profile</a>
                     </li>
                     <li>
-                        <a href="#">Security</a>
+                        <a href="member/account/security">Security</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
