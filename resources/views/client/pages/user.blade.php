@@ -1,6 +1,8 @@
 @extends('client.index')
 
-@section('title','New Posts')
+@section('title')
+    {{$user->name}}
+@endsection
 
 @section('style')
     <!-- Bootstrap Core CSS -->
