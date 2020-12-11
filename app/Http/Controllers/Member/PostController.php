@@ -86,6 +86,9 @@ class PostController extends Controller
             where([['id', '=', $request->id],
                 ['author_id', '=', Auth::user()->id]
             ])->first());
+        if (!$post) {
+            return abort(404);
+        }
         return view('dashboard.pages.member.post.edit', ['post' => $post, 'topics' => $topics]);
     }
 
@@ -133,10 +136,18 @@ class PostController extends Controller
             where([['id', '=', $request->id],
                 ['author_id', '=', Auth::user()->id]
             ])->first());
-        if ($post) {
-            return view('dashboard.pages.member.post.view', ['post' => $post]);
+        if (!$post) {
+            return abort(404);
         }
-        return redirect('/home');
+        $related_posts = Post::where([['category_id', '=', $post->category_id],
+            ['status', '=', 'display'],
+            ['id', '<>', $post->id]])
+            ->take(3)->latest()->get();
+        $new_posts = Post::where([['status', '=', 'display'],
+            ['id', '<>', $post->id]])
+            ->take(3)->latest()->get();
+        return view('dashboard.pages.member.post.view',
+            ['post' => $post, 'related_posts' => $related_posts, 'new_posts' => $new_posts]);
     }
 
     public function postComment(Request $request)
