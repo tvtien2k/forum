@@ -89,7 +89,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="member/post/view/{{$post->id}}">
+                                                <a href="member/post/view/{{$post->id}}" target="_blank">
                                                     <button type="button" class="btn btn-success btn-circle">
                                                         <i class="fa fa-eye"></i>
                                                     </button>
