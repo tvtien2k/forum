@@ -109,8 +109,12 @@ Route::prefix('member')->middleware('member')->group(function () {
 
 // mod
 Route::prefix('mod')->middleware('mod')->group(function () {
-    Route::get('/', function () {
-        return "mod";
+    Route::get('/dashboard', [RedirectController::class, 'getModDashboard']);
+    Route::prefix('post')->group(function () {
+        Route::get('list', [\App\Http\Controllers\Mod\PostController::class, 'getMyPost']);
+        Route::get('list/my-post', [\App\Http\Controllers\Mod\PostController::class, 'getMyPost']);
+        Route::get('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'getPostIManage']);
+        Route::post('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'postPostIManage']);
     });
 });
 

@@ -38,7 +38,7 @@ class InsertDataController extends Controller
     public function insertTopic()
     {
         $faker = Factory::create();
-        for ($i = 1; $i < 6; $i++) {
+        for ($i = 1; $i < 3; $i++) {
             $name = $faker->sentence(1);
             $slug = $this->to_slug($name);
             $id = $this->to_id($slug) . '-' . $i;
@@ -56,7 +56,8 @@ class InsertDataController extends Controller
     public function insertCategory()
     {
         $faker = Factory::create();
-        for ($i = 1; $i < 21; $i++) {
+        for ($i = 1; $i < 11; $i++) {
+            sleep(1);
             $name = $faker->sentence(2);
             $slug = $this->to_slug($name);
             $id = $this->to_id($slug) . '-' . $i;
@@ -72,25 +73,25 @@ class InsertDataController extends Controller
             $cate->slug = $slug;
             $cate->topic_id = $topic_id;
             $cate->save();
-            sleep(2);
         }
     }
 
     public function insertPost()
     {
         $faker = Factory::create();
-        for ($i = 1; $i < 51; $i++) {
+        for ($i = 1; $i < 101; $i++) {
+            sleep(1.2);
             $title = $faker->sentence;
             $slug = $this->to_slug($title);
             $id = $this->to_id($slug) . '-' . $i;
-            $author_id = $faker->numberBetween(4, 6);
+            $author_id = $faker->numberBetween(1, 6);
             $categories = Category::all();
             $arr_categories_id = [];
             foreach ($categories as $category) {
                 array_push($arr_categories_id, $category->id);
             }
             $category_id = $faker->randomElement($arr_categories_id);
-            $content = $faker->text(5000);
+            $content = $faker->text(3000);
             $status = $faker->randomElement(['approval', 'display']);
             $is_post = true;
             $allow_comment = true;
@@ -105,7 +106,6 @@ class InsertDataController extends Controller
             $post->is_post = $is_post;
             $post->allow_comment = $allow_comment;
             $post->save();
-            sleep(2);
         }
     }
 }

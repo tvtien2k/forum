@@ -28,7 +28,7 @@
                 <!-- Blog Post -->
                 <div class="col-md-12">
                     <div class="col-md-2">
-                        <a href="#">
+                        <a>
                             <img class="img-responsive"
                                  src="https://ui-avatars.com/api/?size=128&name={{substr($post->author->name, 0, 1)}}"
                                  alt="">
@@ -39,18 +39,18 @@
                         <h1>{{$post->title}}</h1>
                         <!-- Author -->
                         <p class="lead">
-                            by <a href="#">{{$post->author->name}}</a>
+                            by <a>{{$post->author->name}}</a>
                         </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
                         <h4>
-                            <a href="topic/{{$post->category->topic->slug}}">
+                            <a>
                                 {{$post->category->topic->name}}
                             </a> |
                             <small>
-                                <a href="category/{{$post->category->slug}}">
+                                <a>
                                     <i>{{$post->category->name}}</i>
                                 </a>/
                             </small>
