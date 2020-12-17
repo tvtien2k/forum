@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notice;
 use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
@@ -48,11 +47,19 @@ class PostController extends Controller
         }
         $post->id = $post_id;
         $post->content = $request->_content;
-        $post->status = 'approval';
+        if ($post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
+            $post->status = 'display';
+        } else {
+            $post->status = 'approval';
+        }
         $post->is_post = true;
-        $post->allow_comment = $request->allow_comment;
         $post->save();
-        return redirect('notice/add-post')->with(['id' => $post->id]);
+        if (Auth::user()->level == 0) {
+            return redirect('member/post/list')->with('status', 'Post successfully created!');
+        } elseif (Auth::user()->level == 1) {
+            return redirect('mod/post/list')->with('status', 'Post successfully created!');
+        }
+        return redirect('admin/post/list')->with('status', 'Post successfully created!');
     }
 
     public function getListPost()
@@ -67,13 +74,13 @@ class PostController extends Controller
 
     public function postDeletePost(Request $request)
     {
-        Post::
-        where([
-            ['id', 'like', $request->id . '%'],
-            ['author_id', '=', Auth::user()->id]
-        ])->delete();
-        Notice::where('post_id', 'like', $request->id . '%')->delete();
-        return redirect('member/post/list')->with('status', 'Deleted successfully!');
+        Post::where('id', 'like', $request->id . '%')->delete();
+        if (Auth::user()->level == 0) {
+            return redirect('member/post/list')->with('status', 'Deleted successfully!');
+        } elseif (Auth::user()->level == 1) {
+            return redirect('mod/post/list')->with('status', 'Deleted successfully!');
+        }
+        return redirect('admin/post/list')->with('status', 'Deleted successfully!');
     }
 
     public function getEditPost(Request $request)
@@ -102,16 +109,16 @@ class PostController extends Controller
         $post = Post::where([['id', '=', $request->id],
             ['author_id', '=', Auth::user()->id]
         ])->first();
-        if ($post->status == 'approval') {
+        if ($post->status == 'approval' || $post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
             $post->category_id = $request->category_id;
             $post->title = $request->title;
             $post->slug = $request->slug;
             $post->content = $request->_content;
-            $post->allow_comment = $request->allow_comment;
+            if ($post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
+                $post->status = 'display';
+            }
             $post->save();
-        } elseif ($post->status == 'display') {
-            $post->status = 'update';
-            $post->save();
+        } else {
             $post_update = Post::find($post->id . '_UPDATE') ?? new Post();
             $post_update->id = $request->id . '_UPDATE';
             $post_update->author_id = Auth::user()->id;
@@ -121,10 +128,9 @@ class PostController extends Controller
             $post_update->content = $request->_content;
             $post_update->status = 'approval';
             $post_update->is_post = false;
-            $post_update->allow_comment = $request->allow_comment;
             $post_update->save();
         }
-        return redirect('notice/update-post')->with(['id' => $post->id]);
+        return back()->with('status', 'Edit successfully!');
     }
 
     public function getViewPost(Request $request)
@@ -147,7 +153,11 @@ class PostController extends Controller
             ['id', '<>', $post->id]])
             ->take(3)->latest()->get();
         return view('dashboard.pages.member.post.view',
-            ['post' => $post, 'related_posts' => $related_posts, 'new_posts' => $new_posts]);
+            [
+                'post' => $post,
+                'related_posts' => $related_posts,
+                'new_posts' => $new_posts
+            ]);
     }
 
     public function postComment(Request $request)
@@ -169,8 +179,9 @@ class PostController extends Controller
         $new_comment->author_id = Auth::user()->id;
         $new_comment->content = $request->_content;
         $new_comment->is_post = false;
-        $new_comment->allow_comment = true;
         $new_comment->save();
-        return redirect('notice/add-comment')->with(['parent_comment' => $parent_comment->id, 'new_comment' => $new_comment->id]);
+        $post_id = explode('-', $parent_comment->id)[0] . '-' . explode('_', explode('-', $parent_comment->id)[1])[0];
+        $post = Post::find($post_id);
+        return redirect('post/' . $post->slug . "#" . $new_comment->id);
     }
 }

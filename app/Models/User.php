@@ -65,19 +65,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    public function topics()
+    public function topic()
     {
-        return $this->hasMany('App\Models\Topic', 'mod_id', 'id');
+        return $this->hasOne('App\Models\Topic', 'mod_id', 'id');
     }
 
     public function posts()
     {
         return $this->hasMany('App\Models\Post', 'author_id', 'id');
-    }
-
-    public function notices()
-    {
-        return $this->hasMany('App\Models\Notice', 'user_id', 'id');
     }
 
     public function report()

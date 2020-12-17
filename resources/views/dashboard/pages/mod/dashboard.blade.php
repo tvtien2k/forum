@@ -1,6 +1,6 @@
 @extends('dashboard.index')
 
-@section('title', 'Mod')
+@section('title', 'Member')
 
 @section('style')
     <!-- Bootstrap Core CSS -->
@@ -37,8 +37,48 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
+                <div class="col-lg-8 col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Personal information
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <img class="img-responsive"
+                                         src="https://ui-avatars.com/api/?size=200&name={{substr(Auth::user()->name, 0, 1)}}"
+                                         alt="">
+                                </div>
+                                <div class="col-lg-8">
+                                    <p>
+                                        <strong>Name: </strong> {{Auth::user()->name}}
+                                    <p>
+                                    <p>
+                                        <strong>Email: </strong> {{Auth::user()->email}}
+                                    <p>
+                                    <p>
+                                        <strong>Gender: </strong> {{Auth::user()->gender}}
+                                    <p>
+                                    <p>
+                                        <strong>Birthday: </strong> {{Auth::user()->birthday}}
+                                    <p>
+                                    <p>
+                                        <strong>Level: </strong> Mod (Manage topic: {{Auth::user()->topic->name}})
+                                    <p>
+                                    <p>
+                                        <strong>Description: </strong> {{Auth::user()->description}}
+                                    <p>
+                                </div>
+                                <!-- /.col-lg-6 (nested) -->
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            Personal information
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
@@ -59,7 +99,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -81,7 +121,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-6">
                     <div class="panel panel-red">
                         <div class="panel-heading">
                             <div class="row">
@@ -104,80 +144,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-bell fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_notice}}</div>
-                                    <div>Not seen notice</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="member/notice/list">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-clock-o fa-fw"></i> Notice Timeline
-                        <div class="pull-right">
-                            <a href="member/notice/all">Mark all as seen</a>
-                        </div>
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <ul class="timeline">
-                            @for ($i = 0; $i < count($notices); $i++)
-                                <li class="
-                                @if($i % 2 != 0)
-                                    timeline-inverted
-                                @endif
-                                    ">
-                                    <div class="timeline-badge
-                                    @if($notices[$i]->status == "Not seen")
-                                        info
-                                    @endif
-                                        ">
-                                        <i class="fa
-                                        @if($notices[$i]->status == "Seen")
-                                            fa-check
-                                        @endif
-                                            "></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <p>
-                                                <small class="text-muted">
-                                                    <i class="fa fa-clock-o"></i> {{$notices[$i]->created_at}}
-                                                </small>
-                                            </p>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <a href="member/notice/update-status/{{$notices[$i]->id}}">{{$notices[$i]->content}}
-                                                !</a>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endfor
-                        </ul>
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-            </div>
-            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </div>

@@ -113,7 +113,7 @@
                                                                         <i class="fa fa-edit"></i>
                                                                     </button>
                                                                 </a>
-                                                                <form method="post" action="mod/post/delete">
+                                                                <form method="post" action="member/post/delete">
                                                                     @csrf
                                                                     <input name="id" value="{{$post->id}}"
                                                                            hidden>

@@ -66,8 +66,7 @@
                 <hr>
                 @auth
                     <div>
-                        <a class="btn" data-toggle="modal" data-target="#reply" data-id="{{$post->id}}"
-                           data-author="{{$post->author->name}}" href="#">
+                        <a class="btn" id="btn-reply-{{$post->id}}" onclick="showFormCmt(this.id)">
                             Reply <span class="glyphicon glyphicon-chevron-down"></span>
                         </a>
                         <a class="btn pull-right" data-toggle="modal" data-target="#report" data-id="{{$post->id}}"
@@ -75,11 +74,21 @@
                             <span class="glyphicon glyphicon-flag"></span>
                         </a>
                     </div>
-                    <!-- Blog Comments -->
-                    <!-- Comments Form -->
+                    <div class="well form-reply" id="form-reply-{{$post->id}}">
+                        <h4>Comment ...<span class="glyphicon glyphicon-pencil"></span></h4>
+                        <form role="form" method="post" action="member/post/comment">
+                            @csrf
+                            <input name="id" value="{{$post->id}}" hidden>
+                            <div id="div-textarea-{{$post->id}}">
+                                <div class="form-group textarea-reply">
+                                    <textarea class="editor" name="_content"></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
                     <hr>
                 @endauth
-            <!-- Posted Comments -->
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -90,7 +99,6 @@
                         </ul>
                     </div>
                 @endif
-            <!-- Comment -->
                 @foreach($comments as $comment)
                     <div class="row-item row">
                         @php
@@ -110,9 +118,8 @@
                                 {{$comment->content}}
                             </div>
                             @auth
-                                <div class="media-bottom">
-                                    <a class="btn" data-toggle="modal" data-target="#reply" data-id="{{$comment->id}}"
-                                       data-author="{{$comment->author->name}}" href="#">
+                                <div class="media-bottom" id="btn-reply-{{$comment->id}}">
+                                    <a class="btn" id="btn-reply-{{$comment->id}}" onclick="showFormCmt(this.id)">
                                         Reply <span class="glyphicon glyphicon-chevron-down"></span>
                                     </a>
                                     <a class="btn pull-right" data-toggle="modal" data-target="#report"
@@ -121,39 +128,20 @@
                                         <span class="glyphicon glyphicon-flag"></span>
                                     </a>
                                 </div>
+                                <div class="well form-reply" id="form-reply-{{$comment->id}}" hidden>
+                                    <h4>Comment ...<span class="glyphicon glyphicon-pencil"></span></h4>
+                                    <form role="form" method="post" action="member/post/comment">
+                                        @csrf
+                                        <input name="id" value="{{$comment->id}}" hidden>
+                                        <div id="div-textarea-{{$comment->id}}">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Send</button>
+                                    </form>
+                                </div>
                             @endauth
                         </div>
                     </div>
                 @endforeach
-            </div>
-            <div class="modal fade" id="reply" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Reply</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form method="post" action="member/post/comment">
-                            @csrf
-                            <div class="modal-body">
-                                <input class="id" type="hidden" name="id">
-                                <div class="well">
-                                    <h4>Comment ...<span class="glyphicon glyphicon-pencil"></span></h4>
-                                    <div class="form-group">
-                                        <textarea class="editor" name="_content"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
             <div class="modal fade" id="report" tabindex="-1" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
@@ -243,14 +231,6 @@
     <script src="assets_client/js/bootstrap.min.js"></script>
     <script src="assets_client/js/my.js"></script>
     <script>
-        $('#reply').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget)
-            var id = button.data('id')
-            var author = button.data('author')
-            var modal = $(this)
-            modal.find('.modal-title').text('Reply ' + author)
-            modal.find('input.id').val(id)
-        })
         $('#report').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var id = button.data('id')
@@ -258,66 +238,93 @@
             var modal = $(this)
             modal.find('.modal-title').text('Report ' + author)
             modal.find('input.id').val(id)
-        })
+        });
     </script>
     <script src="ckeditor5/build/ckeditor.js"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('.editor'), {
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'bold',
-                        'italic',
-                        'link',
-                        'bulletedList',
-                        'numberedList',
-                        '|',
-                        'indent',
-                        'outdent',
-                        '|',
-                        'alignment',
-                        'insertTable',
-                        'blockQuote',
-                        'undo',
-                        'redo',
-                        '|',
-                        'mediaEmbed',
-                        'imageInsert',
-                        '|',
-                        'code',
-                        'codeBlock',
-                        '|',
-                        'htmlEmbed',
-                        'exportPdf'
-                    ]
-                },
-                language: 'en',
-                image: {
-                    toolbar: [
-                        'imageTextAlternative',
-                        'imageStyle:full',
-                        'imageStyle:side'
-                    ]
-                },
-                table: {
-                    contentToolbar: [
-                        'tableColumn',
-                        'tableRow',
-                        'mergeTableCells'
-                    ]
-                },
-                licenseKey: '',
-            })
-            .then(editor => {
-                window.editor = editor;
-            })
-            .catch(error => {
-                console.error('Oops, something went wrong!');
-                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-                console.warn('Build id: t7ukt7v91nmd-3rq4gwmsanl7');
-                console.error(error);
-            });
+        function getEditor() {
+            ClassicEditor
+                .create(document.querySelector('.editor'), {
+                    toolbar: {
+                        items: [
+                            'heading',
+                            '|',
+                            'bold',
+                            'italic',
+                            'link',
+                            'bulletedList',
+                            'numberedList',
+                            '|',
+                            'indent',
+                            'outdent',
+                            '|',
+                            'alignment',
+                            'insertTable',
+                            'blockQuote',
+                            'undo',
+                            'redo',
+                            '|',
+                            'mediaEmbed',
+                            'imageInsert',
+                            '|',
+                            'code',
+                            'codeBlock',
+                            '|',
+                            'htmlEmbed',
+                            'exportPdf'
+                        ]
+                    },
+                    language: 'en',
+                    image: {
+                        toolbar: [
+                            'imageTextAlternative',
+                            'imageStyle:full',
+                            'imageStyle:side'
+                        ]
+                    },
+                    table: {
+                        contentToolbar: [
+                            'tableColumn',
+                            'tableRow',
+                            'mergeTableCells'
+                        ]
+                    },
+                    licenseKey: '',
+                })
+                .then(editor => {
+                    window.editor = editor;
+                })
+                .catch(error => {
+                    console.error('Oops, something went wrong!');
+                    console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                    console.warn('Build id: t7ukt7v91nmd-3rq4gwmsanl7');
+                    console.error(error);
+                });
+        }
+
+        getEditor();
+    </script>
+    <script>
+        function showFormCmt(btn_id) {
+            var forms = document.getElementsByClassName("form-reply");
+            for (var i = 0; i < forms.length; i++) {
+                forms[i].setAttribute('hidden', true);
+            }
+            var textareas = document.getElementsByClassName("textarea-reply");
+            console.log(textareas);
+            if (textareas.length > 0) {
+                for (var i = 0; i < textareas.length; i++) {
+                    textareas[i].remove();
+                }
+            }
+            console.log(textareas);
+            var id = btn_id.slice(10);
+            document.getElementById('form-reply-' + id).removeAttribute('hidden');
+            document.getElementById('div-textarea-' + id).innerHTML = '' +
+                '<div class="form-group textarea-reply">' +
+                '<textarea class="editor" name="_content"></textarea>' +
+                '</div>';
+            getEditor();
+        }
     </script>
 @endsection

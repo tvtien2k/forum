@@ -22,7 +22,6 @@ class CreateTblPostTable extends Migration
             $table->text('content');
             $table->string('status')->nullable();
             $table->boolean('is_post');
-            $table->boolean('allow_comment')->default(true);
             $table->timestamps();
 
             $table->primary('id');

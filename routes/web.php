@@ -7,7 +7,6 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\RedirectController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\NoticeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,14 +68,6 @@ Route::prefix('ajax')->group(function () {
     Route::get('/getPost/{key}', [AjaxController::class, 'getPost']);
 });
 
-// notice
-Route::prefix('notice')->middleware('auth')->group(function () {
-    Route::get('/add-post', [NoticeController::class, 'getAddPost']);
-    Route::get('/update-post', [NoticeController::class, 'getUpdatePost']);
-    Route::get('/add-comment', [NoticeController::class, 'getAddComment']);
-    Route::get('/add-report', [NoticeController::class, 'getAddReport']);
-});
-
 // member
 Route::prefix('member')->middleware('member')->group(function () {
     Route::get('/dashboard', [RedirectController::class, 'getMemberDashboard']);
@@ -84,16 +75,11 @@ Route::prefix('member')->middleware('member')->group(function () {
         Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
         Route::post('/add', [\App\Http\Controllers\Member\PostController::class, 'postAddPost']);
         Route::get('/list', [\App\Http\Controllers\Member\PostController::class, 'getListPost']);
-        Route::post('/delete', [\App\Http\Controllers\Member\PostController::class, 'postDeletePost']);
+        Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
         Route::get('/edit/{id}', [\App\Http\Controllers\Member\PostController::class, 'getEditPost']);
         Route::post('/edit', [\App\Http\Controllers\Member\PostController::class, 'postEditPost']);
-        Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
         Route::post('/comment', [\App\Http\Controllers\Member\PostController::class, 'postComment']);
-    });
-    Route::prefix('/notice')->group(function () {
-        Route::get('/list', [\App\Http\Controllers\Member\NoticeController::class, 'getNotice']);
-        Route::get('/update-status/{id}', [\App\Http\Controllers\Member\NoticeController::class, 'getRedirectNotice']);
-        Route::get('/all', [\App\Http\Controllers\Member\NoticeController::class, 'getMarkSeen']);
+        Route::post('/delete', [\App\Http\Controllers\Member\PostController::class, 'postDeletePost']);
     });
     Route::prefix('/report')->group(function () {
         Route::post('/add', [\App\Http\Controllers\Member\ReportController::class, 'postAddReport']);
@@ -111,10 +97,14 @@ Route::prefix('member')->middleware('member')->group(function () {
 Route::prefix('mod')->middleware('mod')->group(function () {
     Route::get('/dashboard', [RedirectController::class, 'getModDashboard']);
     Route::prefix('post')->group(function () {
+        Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
         Route::get('list', [\App\Http\Controllers\Mod\PostController::class, 'getMyPost']);
         Route::get('list/my-post', [\App\Http\Controllers\Mod\PostController::class, 'getMyPost']);
         Route::get('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'getPostIManage']);
         Route::post('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'postPostIManage']);
+        Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
+        Route::get('/edit/{id}', [\App\Http\Controllers\Member\PostController::class, 'getEditPost']);
+        Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
     });
 });
 

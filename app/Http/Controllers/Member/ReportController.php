@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,8 @@ class ReportController extends Controller
         $report->user_id = Auth::id();
         $report->content = $request->_content;
         $report->save();
-        return redirect('notice/add-report')->with(['id' => $report->id]);
+        $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
+        $post = Post::find($post_id);
+        return redirect('post/' . $post->slug . "#" . $request->id);
     }
 }

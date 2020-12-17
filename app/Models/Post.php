@@ -23,11 +23,6 @@ class Post extends Model
         return $this->belongsTo('App\Models\User', 'author_id', 'id');
     }
 
-    public function notices()
-    {
-        return $this->hasMany('App\Models\Notice', 'post_id', 'id');
-    }
-
     public function reports()
     {
         return $this->hasMany('App\Models\Report', 'post_id', 'id');
