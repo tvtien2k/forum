@@ -109,10 +109,9 @@ class PostController extends Controller
     public function postApprovalPost(Request $request)
     {
         if ($request->action == 'Approval') {
-            $post_update = Post::find($request->id);
-            if ($post_update) {
-                $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
-                $post = Post::find($post_id);
+            $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
+            $post = Post::find($post_id);
+            if ($post->status == 'update') {
                 $post_update = Post::find($request->id);
                 $post->category_id = $post_update->category_id;
                 $post->title = $post_update->title;
@@ -123,11 +122,9 @@ class PostController extends Controller
                 $post->save();
                 $post_update->delete();
             } else {
-                $post = Post::find($request->id);
                 $post->status = 'display';
                 $post->save();
             }
-
         } elseif ($request->action == 'Disapproval') {
             $post = Post::find($request->id);
             $post->status = 'approval';
