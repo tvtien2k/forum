@@ -142,8 +142,7 @@
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                <a href="mod/post/approval/{{$post->id}}"
-                                                                   target="_blank">
+                                                                <a href="mod/post/approval/{{$post->id}}">
                                                                     <button type="button"
                                                                             class="btn btn-success btn-circle">
                                                                         <i class="fa fa-eye"></i>

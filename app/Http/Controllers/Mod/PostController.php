@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class PostController extends Controller
 {
@@ -108,10 +109,32 @@ class PostController extends Controller
     public function postApprovalPost(Request $request)
     {
         if ($request->action == 'Approval') {
-            $post = Post::find($request->id);
+            $post_update = Post::find($request->id);
+            if ($post_update) {
+                $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
+                $post = Post::find($post_id);
+                $post_update = Post::find($request->id);
+                $post->category_id = $post_update->category_id;
+                $post->title = $post_update->title;
+                $post->slug = $post_update->slug;
+                $post->content = $post_update->content;
+                $post->updated_at = $post_update->created_at;
+                $post->status = 'display';
+                $post->save();
+                $post_update->delete();
+            } else {
+                $post = Post::find($request->id);
+                $post->status = 'display';
+                $post->save();
+            }
 
         } elseif ($request->action == 'Disapproval') {
-
+            $post = Post::find($request->id);
+            $post->status = 'approval';
+            $post->save();
+        } else {
+            return redirect('mod/post/list/post-i-manage');
         }
+        return redirect('mod/post/list/post-i-manage')->with('status', 'Update successfully!');
     }
 }

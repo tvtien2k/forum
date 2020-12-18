@@ -23,7 +23,7 @@ class AccountController extends Controller
         $user->birthday = $request->birthday;
         $user->description = $request->description;
         $user->save();
-        return back();
+        return back()->with('status', 'Update profile successfully!');
     }
 
     public function getSecurity()

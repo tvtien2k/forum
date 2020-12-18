@@ -107,6 +107,10 @@ Route::prefix('mod')->middleware('mod')->group(function () {
         Route::post('/approval', [\App\Http\Controllers\Mod\PostController::class, 'postApprovalPost']);
         Route::get('/edit/{id}', [\App\Http\Controllers\Member\PostController::class, 'getEditPost']);
     });
+    Route::prefix('/account')->group(function () {
+        Route::get('/profile', [\App\Http\Controllers\Member\AccountController::class, 'getProfile']);
+        Route::get('/security', [\App\Http\Controllers\Member\AccountController::class, 'getSecurity']);
+    });
 });
 
 //admin

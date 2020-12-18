@@ -87,8 +87,8 @@
                             <label class="text-muted">Category I manage</label>
                         </div>
                         <div class="options">
-                            <a href="#" class="btn btn-default btn-lg"><i
-                                    class="glyphicon glyphicon-search"></i> See more
+                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-search"></i> See more
                             </a>
                         </div>
                     </div>
@@ -103,8 +103,8 @@
                             <label class="text-muted">Post I manage</label>
                         </div>
                         <div class="options">
-                            <a href="#" class="btn btn-default btn-lg"><i
-                                    class="glyphicon glyphicon-search"></i> See more
+                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-search"></i> See more
                             </a>
                         </div>
                     </div>
@@ -119,8 +119,8 @@
                             <label class="text-muted">Approved post</label>
                         </div>
                         <div class="options">
-                            <a href="#" class="btn btn-default btn-lg"><i
-                                    class="glyphicon glyphicon-search"></i> See more
+                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-search"></i> See more
                             </a>
                         </div>
                     </div>
@@ -135,8 +135,8 @@
                             <label class="text-muted">Unapproved post</label>
                         </div>
                         <div class="options">
-                            <a href="#" class="btn btn-default btn-lg"><i
-                                    class="glyphicon glyphicon-search"></i> See more
+                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-search"></i> See more
                             </a>
                         </div>
                     </div>
@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="member/post/list">
+                        <a href="mod/post/list">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -176,7 +176,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="member/post/list">
+                        <a href="mod/post/list">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -198,11 +198,10 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="member/post/list">
+                        <a href="mod/post/list">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-
                                 <div class="clearfix"></div>
                             </div>
                         </a>
