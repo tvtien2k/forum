@@ -40,6 +40,12 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
+                    @if (session('status'))
+                        <div class="alert alert-info alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{session('status')}}
+                        </div>
+                    @endif
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Tabs
@@ -113,7 +119,11 @@
                                                     @foreach($posts as $post)
                                                         <tr>
                                                             <td>{{$post->id}}</td>
-                                                            <td>{{$post->author->name}}</td>
+                                                            <td>
+                                                                <a href="user/{{$post->author->id}}">
+                                                                    {{$post->author->name}}
+                                                                </a>
+                                                            </td>
                                                             <td>{{$post->category->name}}</td>
                                                             <td>{{$post->title}}</td>
                                                             <td>
@@ -132,29 +142,13 @@
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                <a href="member/post/view/{{$post->id}}"
+                                                                <a href="mod/post/approval/{{$post->id}}"
                                                                    target="_blank">
                                                                     <button type="button"
                                                                             class="btn btn-success btn-circle">
                                                                         <i class="fa fa-eye"></i>
                                                                     </button>
                                                                 </a>
-                                                                <a href="member/post/edit/{{$post->id}}">
-                                                                    <button type="button"
-                                                                            class="btn btn-info btn-circle">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </button>
-                                                                </a>
-                                                                <form method="post" action="member/post/delete">
-                                                                    @csrf
-                                                                    <input name="id" value="{{$post->id}}"
-                                                                           hidden>
-                                                                    <button type="submit"
-                                                                            class="btn btn-danger btn-circle"
-                                                                            onclick="return confirm('Are you sure want to delete {{$post->title}}?');">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                </form>
                                                             </td>
                                                             <td>{{$post->created_at}}</td>
                                                         </tr>

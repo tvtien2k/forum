@@ -1,6 +1,6 @@
 @extends('dashboard.index')
 
-@section('title', 'Member')
+@section('title', 'Mod')
 
 @section('style')
     <!-- Bootstrap Core CSS -->
@@ -77,7 +77,71 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-sm-3">
+                    <div class="hero-widget well well-sm">
+                        <div class="icon">
+                            <i class="glyphicon glyphicon-th-list"></i>
+                        </div>
+                        <div class="text">
+                            <span class="value">{{$count_category_i_manage}}</span>
+                            <label class="text-muted">Category I manage</label>
+                        </div>
+                        <div class="options">
+                            <a href="#" class="btn btn-default btn-lg"><i
+                                    class="glyphicon glyphicon-search"></i> See more
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="hero-widget well well-sm">
+                        <div class="icon">
+                            <i class="glyphicon glyphicon-th"></i>
+                        </div>
+                        <div class="text">
+                            <span class="value">{{$count_post_i_manage}}</span>
+                            <label class="text-muted">Post I manage</label>
+                        </div>
+                        <div class="options">
+                            <a href="#" class="btn btn-default btn-lg"><i
+                                    class="glyphicon glyphicon-search"></i> See more
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="hero-widget well well-sm">
+                        <div class="icon">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </div>
+                        <div class="text">
+                            <span class="value">{{$approved_post}}</span>
+                            <label class="text-muted">Approved post</label>
+                        </div>
+                        <div class="options">
+                            <a href="#" class="btn btn-default btn-lg"><i
+                                    class="glyphicon glyphicon-search"></i> See more
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="hero-widget well well-sm">
+                        <div class="icon">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </div>
+                        <div class="text">
+                            <span class="value">{{$unapproved_post}}</span>
+                            <label class="text-muted">Unapproved post</label>
+                        </div>
+                        <div class="options">
+                            <a href="#" class="btn btn-default btn-lg"><i
+                                    class="glyphicon glyphicon-search"></i> See more
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
@@ -85,8 +149,8 @@
                                     <i class="fa fa-table fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_all_post}}</div>
-                                    <div>All Post</div>
+                                    <div class="huge">{{$count_all_my_post}}</div>
+                                    <div>All my post</div>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +163,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -121,7 +185,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="panel panel-red">
                         <div class="panel-heading">
                             <div class="row">
@@ -129,7 +193,7 @@
                                     <i class="fa fa-eye-slash fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_approval_post}}</div>
+                                    <div class="huge">{{$count_waiting_for_approval}}</div>
                                     <div>Waiting for approval</div>
                                 </div>
                             </div>
@@ -144,6 +208,7 @@
                         </a>
                     </div>
                 </div>
+
             </div>
         </div>
         <!-- /.container-fluid -->

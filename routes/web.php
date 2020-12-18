@@ -103,8 +103,9 @@ Route::prefix('mod')->middleware('mod')->group(function () {
         Route::get('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'getPostIManage']);
         Route::post('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'postPostIManage']);
         Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
+        Route::get('/approval/{id}', [\App\Http\Controllers\Mod\PostController::class, 'getApprovalPost']);
+        Route::post('/approval', [\App\Http\Controllers\Mod\PostController::class, 'postApprovalPost']);
         Route::get('/edit/{id}', [\App\Http\Controllers\Member\PostController::class, 'getEditPost']);
-        Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
     });
 });
 

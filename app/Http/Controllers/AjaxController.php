@@ -10,7 +10,8 @@ class AjaxController extends Controller
 {
     public function getCategory(Request $request)
     {
-        $categories = Category::where('topic_id', '=', $request->topic_id)->get();
+        $categories = Category::where('topic_id', '=', $request->topic_id)
+            ->get();
         foreach ($categories as $category) {
             echo "<option value=" . $category->id . ">" . $category->name . "</option>";
         }
@@ -18,8 +19,11 @@ class AjaxController extends Controller
 
     public function getPost(Request $request)
     {
-        $posts = Post::where([['title', 'like', '%' . $request->key . '%'], ['status', '=', 'display']])
-            ->latest()->take(6)->get();
+        $posts = Post::where('title', 'like', '%' . $request->key . '%')
+            ->where('status', '<>', 'approval')
+            ->latest()
+            ->take(6)
+            ->get();
         foreach ($posts as $post) {
             echo '<option value="' . $post->title . '">';
         }

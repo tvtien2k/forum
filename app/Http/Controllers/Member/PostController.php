@@ -34,11 +34,13 @@ class PostController extends Controller
             '_content' => 'required',
         ]);
         $post = new Post();
-        $post->author_id = Auth::user()->id;
+        $post->author_id = Auth::id();
         $post->category_id = $request->category_id;
         $post->title = $request->title;
         $post->slug = $request->slug;
-        $post_latest = Post::where('is_post', '=', true)->latest()->first();
+        $post_latest = Post::where('is_post', '=', true)
+            ->latest()
+            ->first();
         if ($post_latest) {
             $index = (int)explode('-', $post_latest->id)[1] + 1;
             $post_id = $this->to_id($post->slug) . '-' . $index;
@@ -55,48 +57,52 @@ class PostController extends Controller
         $post->is_post = true;
         $post->save();
         if (Auth::user()->level == 0) {
-            return redirect('member/post/list')->with('status', 'Post successfully created!');
+            return redirect('member/post/list')
+                ->with('status', 'Post successfully created!');
         } elseif (Auth::user()->level == 1) {
-            return redirect('mod/post/list')->with('status', 'Post successfully created!');
+            return redirect('mod/post/list')
+                ->with('status', 'Post successfully created!');
         }
-        return redirect('admin/post/list')->with('status', 'Post successfully created!');
+        return redirect('admin/post/list')
+            ->with('status', 'Post successfully created!');
     }
 
     public function getListPost()
     {
-        $posts = Post::
-        where([
-                ['author_id', '=', Auth::user()->id],
-                ['is_post', '=', true]]
-        )->latest()->get();
+        $posts = Post::where('author_id', '=', Auth::id())
+            ->where('is_post', '=', true)
+            ->latest()
+            ->get();
         return view('dashboard.pages.member.post.list', ['posts' => $posts]);
     }
 
     public function postDeletePost(Request $request)
     {
-        Post::where('id', 'like', $request->id . '%')->delete();
-        if (Auth::user()->level == 0) {
-            return redirect('member/post/list')->with('status', 'Deleted successfully!');
-        } elseif (Auth::user()->level == 1) {
-            return redirect('mod/post/list')->with('status', 'Deleted successfully!');
-        }
-        return redirect('admin/post/list')->with('status', 'Deleted successfully!');
+        Post::where('id', 'like', $request->id . '%')
+            ->delete();
+        return back()
+            ->with('status', 'Deleted successfully!');
     }
 
     public function getEditPost(Request $request)
     {
         $topics = Topic::all();
-        $post = (Post::
-            where([['id', '=', $request->id . '_UPDATE'],
-                ['author_id', '=', Auth::user()->id]
-            ])->first()) ?? (Post::
-            where([['id', '=', $request->id],
-                ['author_id', '=', Auth::user()->id]
-            ])->first());
+        $post =
+            (Post::where('id', '=', $request->id . '_UPDATE')
+                ->where('author_id', '=', Auth::id())
+                ->first())
+            ??
+            (Post::where('id', '=', $request->id)
+                ->where('author_id', '=', Auth::id())
+                ->first());
         if (!$post) {
             return abort(404);
         }
-        return view('dashboard.pages.member.post.edit', ['post' => $post, 'topics' => $topics]);
+        return view('dashboard.pages.member.post.edit',
+            [
+                'post' => $post,
+                'topics' => $topics
+            ]);
     }
 
     public function postEditPost(Request $request)
@@ -106,22 +112,23 @@ class PostController extends Controller
             'slug' => 'max:255',
             '_content' => 'required',
         ]);
-        $post = Post::where([['id', '=', $request->id],
-            ['author_id', '=', Auth::user()->id]
-        ])->first();
+        $post = Post::where('id', '=', $request->id)
+            ->where('author_id', '=', Auth::id())
+            ->first();
         if ($post->status == 'approval' || $post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
             $post->category_id = $request->category_id;
             $post->title = $request->title;
             $post->slug = $request->slug;
             $post->content = $request->_content;
-            if ($post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
-                $post->status = 'display';
-            }
             $post->save();
         } else {
+            if ($post->status == 'display') {
+                $post->status = 'update';
+                $post->save();
+            }
             $post_update = Post::find($post->id . '_UPDATE') ?? new Post();
             $post_update->id = $request->id . '_UPDATE';
-            $post_update->author_id = Auth::user()->id;
+            $post_update->author_id = Auth::id();
             $post_update->category_id = $request->category_id;
             $post_update->title = $request->title;
             $post_update->slug = $request->slug;
@@ -135,23 +142,30 @@ class PostController extends Controller
 
     public function getViewPost(Request $request)
     {
-        $post = (Post::
-            where([['id', '=', $request->id . '_UPDATE'],
-                ['author_id', '=', Auth::user()->id]
-            ])->first()) ?? (Post::
-            where([['id', '=', $request->id],
-                ['author_id', '=', Auth::user()->id]
-            ])->first());
+        $post =
+            (Post::where('id', '=', $request->id . '_UPDATE')
+                ->where('author_id', '=', Auth::id())
+                ->first())
+            ??
+            (Post::where('id', '=', $request->id)
+                ->where('author_id', '=', Auth::id())
+                ->first());
         if (!$post) {
             return abort(404);
         }
-        $related_posts = Post::where([['category_id', '=', $post->category_id],
-            ['status', '=', 'display'],
-            ['id', '<>', $post->id]])
-            ->take(3)->latest()->get();
-        $new_posts = Post::where([['status', '=', 'display'],
-            ['id', '<>', $post->id]])
-            ->take(3)->latest()->get();
+        $related_posts = Post::where('category_id', '=', $post->category_id)
+            ->where('status', '<>', 'approval')
+            ->where('is_post', '=', true)
+            ->where('id', '<>', $post->id)
+            ->take(3)
+            ->latest()
+            ->get();
+        $new_posts = Post::where('status', '<>', 'approval')
+            ->where('id', '<>', $post->id)
+            ->where('is_post', '=', true)
+            ->take(3)
+            ->latest()
+            ->get();
         return view('dashboard.pages.member.post.view',
             [
                 'post' => $post,
@@ -166,7 +180,9 @@ class PostController extends Controller
             '_content' => 'required',
         ]);
         $parent_comment = Post::find($request->id);
-        $latest_comment = Post::where('id', 'REGEXP', '^' . $request->id . '_[0-9]*$')->latest()->first();
+        $latest_comment = Post::where('id', 'REGEXP', '^' . $request->id . '_[0-9]*$')
+            ->latest()
+            ->first();
         if ($latest_comment) {
             $arr = explode('_', explode('-', $latest_comment->id)[1]);
             $index = (int)$arr[count($arr) - 1] + 1;
@@ -176,7 +192,7 @@ class PostController extends Controller
         }
         $new_comment = new Post();
         $new_comment->id = $id;
-        $new_comment->author_id = Auth::user()->id;
+        $new_comment->author_id = Auth::id();
         $new_comment->content = $request->_content;
         $new_comment->is_post = false;
         $new_comment->save();
