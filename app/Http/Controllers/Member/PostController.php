@@ -198,6 +198,6 @@ class PostController extends Controller
         $new_comment->save();
         $post_id = explode('-', $parent_comment->id)[0] . '-' . explode('_', explode('-', $parent_comment->id)[1])[0];
         $post = Post::find($post_id);
-        return redirect('post/' . $post->slug . "#" . $new_comment->id);
+        return redirect('post/' . $post->slug . "#" . explode($post->id . "_", $new_comment->id)[1]);
     }
 }

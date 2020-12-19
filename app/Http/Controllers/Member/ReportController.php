@@ -27,6 +27,6 @@ class ReportController extends Controller
         $report->save();
         $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
         $post = Post::find($post_id);
-        return redirect('post/' . $post->slug . "#" . $request->id);
+        return redirect('post/' . $post->slug . "#" . explode($post->id . "_", $new_comment->id)[1]);
     }
 }

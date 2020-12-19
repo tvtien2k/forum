@@ -111,7 +111,8 @@
                             $level = count(explode('_', explode('-', $comment->id)[1])) - 2;
                         @endphp
                         <div class="col-md-{{$level}}"></div>
-                        <div class="media col-md-{{12-$level}} border-left" id="{{$comment->id}}">
+                        <div class="media col-md-{{12-$level}} border-left"
+                             id="{{explode($post->id."_",$comment->id)[1]}}">
                             <a class="pull-left" href="user/{{$comment->author_id}}">
                                 <img class="media-object"
                                      src="https://ui-avatars.com/api/?size=64&name={{substr($comment->author->name, 0, 1)}}"
@@ -251,7 +252,7 @@
     <script>
         tinymce.init({
             selector: 'textarea',
-            plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+            plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker autoresize',
             toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
             toolbar_mode: 'floating',
             tinycomments_mode: 'embedded',
