@@ -18,6 +18,10 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- Tiny -->
+    <script src="https://cdn.tiny.cloud/1/hdeyuuwa87xv4l8rh9se9bd7ze213rdiibh73cg19yqswf8j/tinymce/5/tinymce.min.js"
+            referrerpolicy="origin"></script>
 @endsection
 
 @section('content')
@@ -62,7 +66,9 @@
                 </div>
                 <hr>
                 <!-- Post Content -->
-                <div>{{$post->content}}</div>
+                <div>
+                    {!!$post->content!!}
+                </div>
                 <hr>
                 @auth
                     <div>
@@ -115,7 +121,7 @@
                                 <h4 class="media-heading">{{$comment->author->name}}
                                     <small>{{$comment->created_at}}</small>
                                 </h4>
-                                {{$comment->content}}
+                                {!!$comment->content!!}
                             </div>
                             @auth
                                 <div class="media-bottom" id="btn-reply-{{$comment->id}}">
@@ -133,7 +139,8 @@
                                     <form role="form" method="post" action="member/post/comment">
                                         @csrf
                                         <input name="id" value="{{$comment->id}}" hidden>
-                                        <div id="div-textarea-{{$comment->id}}">
+                                        <div class="form-group">
+                                            <textarea name="_content"></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Send</button>
                                     </form>
@@ -160,7 +167,7 @@
                                 <div class="well">
                                     <h4>Content report ...<span class="glyphicon glyphicon-pencil"></span></h4>
                                     <div class="form-group">
-                                        <textarea class="form-control" name="_content" rows="3"></textarea>
+                                        <textarea name="_content"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -240,91 +247,26 @@
             modal.find('input.id').val(id)
         });
     </script>
-    <script src="ckeditor5/build/ckeditor.js"></script>
-    <script>
-        function getEditor() {
-            ClassicEditor
-                .create(document.querySelector('.editor'), {
-                    toolbar: {
-                        items: [
-                            'heading',
-                            '|',
-                            'bold',
-                            'italic',
-                            'link',
-                            'bulletedList',
-                            'numberedList',
-                            '|',
-                            'indent',
-                            'outdent',
-                            '|',
-                            'alignment',
-                            'insertTable',
-                            'blockQuote',
-                            'undo',
-                            'redo',
-                            '|',
-                            'mediaEmbed',
-                            'imageInsert',
-                            '|',
-                            'code',
-                            'codeBlock',
-                            '|',
-                            'htmlEmbed',
-                            'exportPdf'
-                        ]
-                    },
-                    language: 'en',
-                    image: {
-                        toolbar: [
-                            'imageTextAlternative',
-                            'imageStyle:full',
-                            'imageStyle:side'
-                        ]
-                    },
-                    table: {
-                        contentToolbar: [
-                            'tableColumn',
-                            'tableRow',
-                            'mergeTableCells'
-                        ]
-                    },
-                    licenseKey: '',
-                })
-                .then(editor => {
-                    window.editor = editor;
-                })
-                .catch(error => {
-                    console.error('Oops, something went wrong!');
-                    console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-                    console.warn('Build id: t7ukt7v91nmd-3rq4gwmsanl7');
-                    console.error(error);
-                });
-        }
 
-        getEditor();
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+        });
     </script>
+
     <script>
         function showFormCmt(btn_id) {
             var forms = document.getElementsByClassName("form-reply");
             for (var i = 0; i < forms.length; i++) {
                 forms[i].setAttribute('hidden', true);
             }
-            var textareas = document.getElementsByClassName("textarea-reply");
-            console.log(textareas);
-            if (textareas.length > 0) {
-                for (var i = 0; i < textareas.length; i++) {
-                    textareas[i].remove();
-                }
-            }
-            console.log(textareas);
             var id = btn_id.slice(10);
             document.getElementById('form-reply-' + id).removeAttribute('hidden');
-            document.getElementById('div-textarea-' + id).innerHTML = '' +
-                '<div class="form-group textarea-reply">' +
-                '<textarea class="editor" name="_content"></textarea>' +
-                '</div>';
-            getEditor();
         }
     </script>
 @endsection

@@ -18,6 +18,10 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- Tiny -->
+    <script src="https://cdn.tiny.cloud/1/hdeyuuwa87xv4l8rh9se9bd7ze213rdiibh73cg19yqswf8j/tinymce/5/tinymce.min.js"
+            referrerpolicy="origin"></script>
 @endsection
 
 @section('content')
@@ -62,7 +66,9 @@
                 </div>
                 <hr>
                 <!-- Post Content -->
-                <div>{{$post->content}}</div>
+                <div>
+                    {!!$post->content!!}
+                </div>
                 <hr>
             </div>
             <!-- Blog Sidebar Widgets Column -->

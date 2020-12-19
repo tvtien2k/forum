@@ -62,7 +62,9 @@
                 </div>
                 <hr>
                 <!-- Post Content -->
-                <div>{{$post->content}}</div>
+                <div>
+                    {!!$post->content!!}
+                </div>
                 <hr>
                 <div class="well">
                     <form role="form" method="post" action="mod/post/approval">

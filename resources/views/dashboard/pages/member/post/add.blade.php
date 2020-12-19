@@ -25,6 +25,10 @@
 
     <!-- jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Tiny -->
+    <script src="https://cdn.tiny.cloud/1/hdeyuuwa87xv4l8rh9se9bd7ze213rdiibh73cg19yqswf8j/tinymce/5/tinymce.min.js"
+            referrerpolicy="origin"></script>
 @endsection
 
 @section('content')
@@ -57,7 +61,7 @@
                             <form role="form" method="post" action="member/post/add">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-9">
                                         <div class="form-group">
                                             <label>Title</label>
                                             <input class="form-control" id="title" onkeyup="ChangeToSlug();"
@@ -65,11 +69,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Content</label>
-                                            <textarea class="editor" name="_content">{{ old('_content') }}</textarea>
+                                            <textarea name="_content">{{ old('_content') }}</textarea>
                                         </div>
                                     </div>
                                     <!-- /.col-lg-6 (nested) -->
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label>Slug</label>
                                             <input class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
@@ -126,65 +130,16 @@
     <!-- Custom Theme JavaScript -->
     <script src="assets_dashboard/js/startmin.js"></script>
 
-    <!-- ckeditor5 -->
-    <script src="ckeditor5/build/ckeditor.js"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('.editor'), {
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'bold',
-                        'italic',
-                        'link',
-                        'bulletedList',
-                        'numberedList',
-                        '|',
-                        'indent',
-                        'outdent',
-                        '|',
-                        'alignment',
-                        'insertTable',
-                        'blockQuote',
-                        'undo',
-                        'redo',
-                        '|',
-                        'mediaEmbed',
-                        'imageInsert',
-                        '|',
-                        'code',
-                        'codeBlock',
-                        '|',
-                        'htmlEmbed',
-                        'exportPdf'
-                    ]
-                },
-                language: 'en',
-                image: {
-                    toolbar: [
-                        'imageTextAlternative',
-                        'imageStyle:full',
-                        'imageStyle:side'
-                    ]
-                },
-                table: {
-                    contentToolbar: [
-                        'tableColumn',
-                        'tableRow',
-                        'mergeTableCells'
-                    ]
-                },
-            })
-            .then(editor => {
-                window.editor = editor;
-            })
-            .catch(error => {
-                console.error('Oops, something went wrong!');
-                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-                console.warn('Build id: t7ukt7v91nmd-3rq4gwmsanl7');
-                console.error(error);
-            });
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            height: 500,
+        });
     </script>
 
     <script>
@@ -239,7 +194,7 @@
             });
         }
 
-        $(document).ready(function ($) {
+        $(document).ready(function () {
             ChangeToSlug();
             getCategory();
         });
