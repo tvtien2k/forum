@@ -40,12 +40,11 @@
                         <div class="col-md-8">
                             <h3><span class="glyphicon glyphicon-align-left"></span> {{$user->name}}</h3>
                             <div class="break"></div>
-                            <h4><span class="glyphicon glyphicon-envelope"></span> Email : </h4>
-                            <p>{{$user->email}}</p>
-                            <h4><span class="glyphicon glyphicon-user"></span> Gender : </h4>
-                            <p>{{$user->gender}}</p>
-                            <h4><span class="glyphicon glyphicon-info-sign"></span> Description : </h4>
-                            <p>{{$user->description}}</p>
+                            <h4><span class="glyphicon glyphicon-envelope"></span> Email : {{$user->email}}</h4>
+                            <h4><span class="glyphicon glyphicon-th"></span> Total Post : {{$posts->total()}}</h4>
+                            <h4><span class="glyphicon glyphicon-user"></span> Gender : {{$user->gender}}</h4>
+                            <h4><span class="glyphicon glyphicon-info-sign"></span> Description : {{$user->description}}
+                            </h4>
                         </div>
                     </div>
                 </div>

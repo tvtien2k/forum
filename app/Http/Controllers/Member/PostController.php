@@ -194,7 +194,7 @@ class PostController extends Controller
         $new_comment->id = $id;
         $new_comment->author_id = Auth::id();
         $new_comment->content = $request->_content;
-        $new_comment->is_post = false;
+        $new_comment->status = 'comment';
         $new_comment->save();
         $post_id = explode('-', $parent_comment->id)[0] . '-' . explode('_', explode('-', $parent_comment->id)[1])[0];
         $post = Post::find($post_id);

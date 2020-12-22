@@ -196,7 +196,7 @@
         $(document).ready(function () {
             $('#dataTables-example').DataTable({
                 responsive: true,
-                order: [[6, "desc"]]
+                order: [[4, "asc"]]
             });
         });
     </script>

@@ -32,11 +32,9 @@
                 <!-- Blog Post -->
                 <div class="col-md-12">
                     <div class="col-md-2">
-                        <a href="user/{{$post->author_id}}">
-                            <img class="img-responsive"
-                                 src="https://ui-avatars.com/api/?size=128&name={{substr($post->author->name, 0, 1)}}"
-                                 alt="">
-                        </a>
+                        <img class="img-responsive"
+                             src="https://ui-avatars.com/api/?size=128&name={{$post->category->topic->slug}}"
+                             alt="">
                     </div>
                     <div class="col-md-10">
                         <!-- Title -->
@@ -48,21 +46,24 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-8">
-                        <h4>
+                    <span>
+                        <strong>
                             <a href="topic/{{$post->category->topic->slug}}">
-                                {{$post->category->topic->name}}
-                            </a> |
-                            <small>
-                                <a href="category/{{$post->category->slug}}">
-                                    <i>{{$post->category->name}}</i>
-                                </a>/
-                            </small>
-                        </h4>
-                    </div>
-                    <div class="col-md-pull-4">
-                        <p><span class="glyphicon glyphicon-time"></span> Posted at {{$post->created_at}}</p>
-                    </div>
+                                Topic: {{$post->category->topic->name}}
+                            </a>
+                        </strong>
+                    </span>
+                    <span class="pull-right">
+                        <a href="category/{{$post->category->slug}}">
+                            Category: {{$post->category->name}}
+                        </a>
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="glyphicon glyphicon-time"></span> Posted at {{$post->created_at}}
+                    <span class="pull-right">
+                        <span class="glyphicon glyphicon-eye-open"></span> {{$post->view}} view
+                    </span>
                 </div>
                 <hr>
                 <!-- Post Content -->

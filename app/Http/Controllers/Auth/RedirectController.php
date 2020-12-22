@@ -12,11 +12,26 @@ class RedirectController extends Controller
 {
     public function redirectLogin()
     {
-        if (Auth::check() && Auth::user()->level == 0) {
+        $ss_post = session('POST');
+        if ($ss_post) {
+            foreach ($ss_post as $id) {
+                $post = Post::find($id);
+                $reader = $post->reader;
+                if ($reader) {
+                    if (!str_contains($reader, Auth::id())) {
+                        $post->reader = $post->reader . ',' . Auth::id();
+                    }
+                } else {
+                    $post->reader = Auth::id();
+                }
+                $post->save();
+            }
+        }
+        if (Auth::user()->level == 0) {
             return redirect('/member/dashboard');
-        } elseif (Auth::check() && Auth::user()->level == 1) {
+        } elseif (Auth::user()->level == 1) {
             return redirect('/mod/dashboard');
-        } elseif (Auth::check() && Auth::user()->level == 2) {
+        } elseif (Auth::user()->level == 2) {
             return redirect('/admin/dashboard');
         }
         return redirect('/login');

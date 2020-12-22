@@ -17,6 +17,9 @@
                 <li>
                     <a href="posts/new">New Posts</a>
                 </li>
+                <li>
+                    <a href="posts/popular">Popular</a>
+                </li>
             </ul>
             @include('client.layouts.search')
             <ul class="nav navbar-nav pull-right">

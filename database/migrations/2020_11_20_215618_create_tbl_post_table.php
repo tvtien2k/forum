@@ -19,9 +19,11 @@ class CreateTblPostTable extends Migration
             $table->string('category_id')->nullable();
             $table->string('title')->nullable();
             $table->string('slug')->nullable();
-            $table->text('content');
+            $table->text('description')->nullable();
+            $table->longText('content');
+            $table->integer('view')->default(0);
+            $table->text('reader')->nullable();
             $table->string('status')->nullable();
-            $table->boolean('is_post');
             $table->timestamps();
 
             $table->primary('id');

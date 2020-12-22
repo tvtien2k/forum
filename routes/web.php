@@ -48,6 +48,7 @@ Route::get('/', [ClientController::class, 'getHome']);
 Route::get('/home', [ClientController::class, 'getHome']);
 Route::get('/post/{slug}', [ClientController::class, 'getPost']);
 Route::get('/posts/new', [ClientController::class, 'getNewPosts']);
+Route::get('/posts/popular', [ClientController::class, 'getPopularPosts']);
 Route::get('/topic/{topic_slug}', [ClientController::class, 'getTopic']);
 Route::get('/category/{category_slug}', [ClientController::class, 'getCategory']);
 Route::get('/user/{id}', [ClientController::class, 'getUser']);

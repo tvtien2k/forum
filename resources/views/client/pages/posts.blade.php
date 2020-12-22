@@ -1,6 +1,8 @@
 @extends('client.index')
 
-@section('title','New Posts')
+@section('title')
+    {{$title}}
+@endsection
 
 @section('style')
     <!-- Bootstrap Core CSS -->
@@ -27,39 +29,86 @@
             <div class="col-md-9">
                 <div class="panel panel-default">
                     <div class="panel-heading" style="background-color:#337AB7; color:white;">
-                        <h2 style="margin-top:0px; margin-bottom:0px;"> New Posts</h2>
+                        <h2 style="margin-top:0px; margin-bottom:0px;"> {{$title}}</h2>
                     </div>
                     <div class="panel-body">
                         @foreach($posts as $post)
-                            <div class="row-item row">
-                                <h3>
-                                    <a href="topic/{{$post->category->topic->slug}}">
-                                        {{$post->category->topic->name}}
-                                    </a> |
-                                    <small>
-                                        <a href="category/{{$post->category->slug}}">
-                                            <i>{{$post->category->name}}</i>
-                                        </a>/
-                                    </small>
-                                </h3>
-                                <div class="col-md-12 border-right">
-                                    <div class="col-md-2">
-                                        <a href="user/{{$post->author_id}}">
+                            @auth
+                                <div class="row-item row
+                                @if(!str_contains($post->reader??'', Auth::id()))
+                                    bg-success
+                                @endif
+                                    ">
+                                    <h3>
+                                        <a href="topic/{{$post->category->topic->slug}}">
+                                            {{$post->category->topic->name}}
+                                        </a> |
+                                        <small>
+                                            <a href="category/{{$post->category->slug}}">
+                                                <i>{{$post->category->name}}</i>
+                                            </a>
+                                        </small>
+                                        <small class="pull-right">
+                                            <a href="user/{{$post->author->id}}">
+                                                <i>{{$post->author->name}}</i>
+                                            </a>
+                                        </small>
+                                    </h3>
+                                    <div class="col-md-12">
+                                        <div class="col-md-3">
                                             <img class="img-responsive"
-                                                 src="https://ui-avatars.com/api/?size=100&name={{substr($post->author->name, 0, 1)}}"
+                                                 src="https://ui-avatars.com/api/?size=128&name={{$post->category->topic->slug}}"
                                                  alt="">
-                                        </a>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h3>{{$post->title}}</h3>
+                                            <p>{{$post->description}}...</p>
+                                            <a class="btn btn-xs btn-primary" href="post/{{$post->slug}}">
+                                                View detail <span class="glyphicon glyphicon-chevron-right"></span>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="col-md-10">
-                                        <h3>{{$post->title}}</h3>
-                                        <a class="btn btn-primary" href="post/{{$post->slug}}">
-                                            View detail <span class="glyphicon glyphicon-chevron-right"></span>
-                                        </a>
-                                    </div>
-
+                                    <div class="break"></div>
                                 </div>
-                                <div class="break"></div>
-                            </div>
+                            @endauth
+                            @guest
+                                <div class="row-item row
+                                @if(!in_array($post->id, session('POST')??[]))
+                                    bg-success
+                                @endif
+                                    ">
+                                    <h3>
+                                        <a href="topic/{{$post->category->topic->slug}}">
+                                            {{$post->category->topic->name}}
+                                        </a> |
+                                        <small>
+                                            <a href="category/{{$post->category->slug}}">
+                                                <i>{{$post->category->name}}</i>
+                                            </a>
+                                        </small>
+                                        <small class="pull-right">
+                                            <a href="user/{{$post->author->id}}">
+                                                <i>{{$post->author->name}}</i>
+                                            </a>
+                                        </small>
+                                    </h3>
+                                    <div class="col-md-12">
+                                        <div class="col-md-3">
+                                            <img class="img-responsive"
+                                                 src="https://ui-avatars.com/api/?size=128&name={{$post->category->topic->slug}}"
+                                                 alt="">
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h3>{{$post->title}}</h3>
+                                            <p>{{$post->description}}...</p>
+                                            <a class="btn btn-xs btn-primary" href="post/{{$post->slug}}">
+                                                View detail <span class="glyphicon glyphicon-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="break"></div>
+                                </div>
+                            @endguest
                         @endforeach
                     </div>
                 </div>

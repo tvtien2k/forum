@@ -89,11 +89,19 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="member/post/view/{{$post->id}}" target="_blank">
-                                                    <button type="button" class="btn btn-success btn-circle">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>
-                                                </a>
+                                                @if($post->status == 'display')
+                                                    <a href="post/{{$post->slug}}" target="_blank">
+                                                        <button type="button" class="btn btn-success btn-circle">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                    </a>
+                                                @else
+                                                    <a href="member/post/view/{{$post->id}}" target="_blank">
+                                                        <button type="button" class="btn btn-success btn-circle">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                    </a>
+                                                @endif
                                                 <a href="member/post/edit/{{$post->id}}">
                                                     <button type="button" class="btn btn-info btn-circle">
                                                         <i class="fa fa-edit"></i>

@@ -20,7 +20,7 @@ class AjaxController extends Controller
     public function getPost(Request $request)
     {
         $posts = Post::where('title', 'like', '%' . $request->key . '%')
-            ->where('status', '<>', 'approval')
+            ->whereIn('status', ['post display', 'post update'])
             ->latest()
             ->take(6)
             ->get();

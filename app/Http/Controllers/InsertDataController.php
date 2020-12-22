@@ -39,15 +39,11 @@ class InsertDataController extends Controller
     {
         $faker = Factory::create();
         for ($i = 1; $i < 3; $i++) {
-            $name = $faker->sentence(1);
-            $slug = $this->to_slug($name);
-            $id = $this->to_id($slug) . '-' . $i;
-            $mod_id = $faker->numberBetween(2, 3);
             $topic = new Topic();
-            $topic->id = $id;
-            $topic->name = $name;
-            $topic->slug = $slug;
-            $topic->mod_id = $mod_id;
+            $topic->name = $faker->sentence(1);
+            $topic->slug = $this->to_slug($topic->name);
+            $topic->id = $this->to_id($topic->slug) . '-' . $i;
+            $topic->mod_id = $faker->numberBetween(2, 3);
             $topic->save();
             sleep(1);
         }
@@ -57,22 +53,18 @@ class InsertDataController extends Controller
     {
         $faker = Factory::create();
         for ($i = 1; $i < 11; $i++) {
-            sleep(1);
-            $name = $faker->sentence(2);
-            $slug = $this->to_slug($name);
-            $id = $this->to_id($slug) . '-' . $i;
+            $cate = new Category();
+            $cate->name = $faker->sentence(2);
+            $cate->slug = $this->to_slug($cate->name);
+            $cate->id = $this->to_id($cate->slug) . '-' . $i;
             $topics = Topic::all();
             $arr_topic_id = [];
             foreach ($topics as $topic) {
                 array_push($arr_topic_id, $topic->id);
             }
-            $topic_id = $faker->randomElement($arr_topic_id);
-            $cate = new Category();
-            $cate->id = $id;
-            $cate->name = $name;
-            $cate->slug = $slug;
-            $cate->topic_id = $topic_id;
+            $cate->topic_id = $faker->randomElement($arr_topic_id);
             $cate->save();
+            sleep(1);
         }
     }
 
@@ -80,32 +72,23 @@ class InsertDataController extends Controller
     {
         $faker = Factory::create();
         for ($i = 1; $i < 101; $i++) {
-            sleep(1.2);
-            $title = $faker->sentence;
-            $slug = $this->to_slug($title);
-            $id = $this->to_id($slug) . '-' . $i;
-            $author_id = $faker->numberBetween(1, 6);
+            $post = new Post();
+            $post->author_id = $faker->numberBetween(1, 6);
             $categories = Category::all();
             $arr_categories_id = [];
             foreach ($categories as $category) {
                 array_push($arr_categories_id, $category->id);
             }
-            $category_id = $faker->randomElement($arr_categories_id);
-            $content = $faker->text(3000);
-            $status = $faker->randomElement(['approval', 'display']);
-            $is_post = true;
-            $allow_comment = true;
-            $post = new Post();
-            $post->id = $id;
-            $post->author_id = $author_id;
-            $post->category_id = $category_id;
-            $post->title = $title;
-            $post->slug = $slug;
-            $post->content = $content;
-            $post->status = $status;
-            $post->is_post = $is_post;
-            $post->allow_comment = $allow_comment;
+            $post->category_id = $faker->randomElement($arr_categories_id);
+            $post->title = $faker->sentence;
+            $post->slug = $this->to_slug($post->title);
+            $post->id = $this->to_id($post->slug) . '-' . $i;
+            $post->description = $faker->text(300);
+            $post->content = $faker->text(3000);
+            $post->view = $faker->numberBetween(0, 1000);
+            $post->status = $faker->randomElement(['post approval', 'post display']);
             $post->save();
+            sleep(1);
         }
     }
 }
