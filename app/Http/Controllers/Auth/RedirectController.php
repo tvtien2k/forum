@@ -49,22 +49,22 @@ class RedirectController extends Controller
                     ->where('comment.author_id', '=', Auth::id());
             })
             ->latest()
-            ->take(4)
             ->get();
         $arr_category_id = [];
         foreach ($recently as $post) {
             array_push($arr_category_id, $post->category_id);
         }
-        $posts =
-            (Post::whereIn('category_id', $arr_category_id)
+        if ($recently->count()) {
+            $posts = Post::whereIn('category_id', $arr_category_id)
                 ->whereIn('status', ['post display', 'post update'])
                 ->latest()
-                ->paginate(4))
-            ??
-            (Post::whereIn('status', ['post display', 'post update'])
+                ->paginate(4);
+        } else {
+            $posts = Post::whereIn('status', ['post display', 'post update'])
                 ->orderBy('view', 'desc')
                 ->latest()
-                ->paginate(4));
+                ->paginate(4);
+        }
         $count_all_post = Post::where('author_id', '=', Auth::id())
                 ->where('status', 'like', 'post%')
                 ->count() ?? 0;

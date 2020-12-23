@@ -182,22 +182,22 @@ class ClientController extends Controller
                     ->where('comment.author_id', '=', Auth::id());
             })
             ->latest()
-            ->take(6)
             ->get();
         $arr_category_id = [];
         foreach ($recently as $post) {
             array_push($arr_category_id, $post->category_id);
         }
-        $posts =
-            (Post::whereIn('category_id', $arr_category_id)
+        if ($recently->count()) {
+            $posts = Post::whereIn('category_id', $arr_category_id)
                 ->whereIn('status', ['post display', 'post update'])
                 ->latest()
-                ->paginate(10))
-            ??
-            (Post::whereIn('status', ['post display', 'post update'])
+                ->paginate(10);
+        } else {
+            $posts = Post::whereIn('status', ['post display', 'post update'])
                 ->orderBy('view', 'desc')
                 ->latest()
-                ->paginate(10));
+                ->paginate(10);
+        }
         return view('client.pages.posts',
             [
                 'title' => 'Recommended',
