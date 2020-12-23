@@ -54,7 +54,7 @@
                                         class="timeline-inverted"
                                         @endif
                                     >
-                                        <div class="timeline-badge info"><i class="fa fa-check"></i>
+                                        <div class="timeline-badge danger"><i class="fa fa-check"></i>
                                         </div>
                                         <div class="timeline-panel">
                                             <div class="timeline-heading">
