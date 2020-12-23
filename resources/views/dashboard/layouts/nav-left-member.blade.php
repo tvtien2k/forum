@@ -8,6 +8,9 @@
                 <a href="member/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
             <li>
+                <a href="member/recently"><i class="fa fa-clock-o fa-fw"></i> Recently</a>
+            </li>
+            <li>
                 <a href="#"><i class="fa fa-table fa-fw"></i> Manage Post<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>

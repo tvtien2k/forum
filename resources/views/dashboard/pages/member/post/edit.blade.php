@@ -75,8 +75,13 @@
                                                    name="title" value="{{$post->title}}" required>
                                         </div>
                                         <div class="form-group">
+                                            <label>Description</label>
+                                            <textarea name="description" class="form-control"
+                                                      rows="2" required>{{$post->description}}</textarea>
+                                        </div>
+                                        <div class="form-group">
                                             <label>Content</label>
-                                            <textarea name="_content">{{$post->content}}</textarea>
+                                            <textarea id="_content" name="_content">{{$post->content}}</textarea>
                                         </div>
                                     </div>
                                     <!-- /.col-lg-6 (nested) -->
@@ -147,7 +152,7 @@
 
     <script>
         tinymce.init({
-            selector: 'textarea',
+            selector: '#_content',
             plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker autoresize',
             toolbar: 'a11ycheck addcomment showcomments casechange checklist code formatpainter pageembed permanentpen table',
             toolbar_mode: 'floating',

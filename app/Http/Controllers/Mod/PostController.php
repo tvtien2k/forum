@@ -15,7 +15,7 @@ class PostController extends Controller
     public function getMyPost()
     {
         $posts = Post::where('author_id', '=', Auth::id())
-            ->where('is_post', '=', true)
+            ->where('status', 'like', 'post%')
             ->latest()
             ->get();
         return view('dashboard.pages.mod.post.my-post', ['posts' => $posts]);
@@ -28,7 +28,7 @@ class PostController extends Controller
         $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
             ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
             ->where('tbl_topic.id', '=', $topic->id)
-            ->where('is_post', '=', true)
+            ->where('status', 'like', 'post%')
             ->select('tbl_post.*')
             ->orderBy('tbl_post.created_at', 'desc')
             ->latest()
@@ -49,14 +49,14 @@ class PostController extends Controller
             $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
                 ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
                 ->where('tbl_topic.id', '=', $topic->id)
-                ->where('is_post', '=', true)
+                ->where('status', 'like', 'post%')
                 ->select('tbl_post.*')
                 ->orderBy('tbl_post.created_at', 'desc')
                 ->latest()
                 ->get();
         } else {
             $posts = Post::where('category_id', '=', $request->category_id)
-                ->where('is_post', '=', true)
+                ->where('status', 'like', 'post%')
                 ->latest()
                 ->get();
         }
@@ -86,15 +86,13 @@ class PostController extends Controller
             return abort(404);
         }
         $related_posts = Post::where('category_id', '=', $post->category_id)
-            ->where('status', '<>', 'approval')
-            ->where('is_post', '=', true)
+            ->whereIn('status', ['post display', 'post update'])
             ->where('id', '<>', $post->id)
             ->take(3)
             ->latest()
             ->get();
         $new_posts = Post::where('status', '<>', 'approval')
-            ->where('id', '<>', $post->id)
-            ->where('is_post', '=', true)
+            ->whereIn('status', ['post display', 'post update'])
             ->take(3)
             ->latest()
             ->get();
@@ -111,23 +109,24 @@ class PostController extends Controller
         if ($request->action == 'Approval') {
             $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
             $post = Post::find($post_id);
-            if ($post->status == 'update') {
+            if ($post->status == 'post update') {
                 $post_update = Post::find($request->id);
                 $post->category_id = $post_update->category_id;
                 $post->title = $post_update->title;
                 $post->slug = $post_update->slug;
                 $post->content = $post_update->content;
+                $post->description = $post_update->description;
                 $post->updated_at = $post_update->created_at;
-                $post->status = 'display';
+                $post->status = 'post display';
                 $post->save();
                 $post_update->delete();
             } else {
-                $post->status = 'display';
+                $post->status = 'post display';
                 $post->save();
             }
         } elseif ($request->action == 'Disapproval') {
             $post = Post::find($request->id);
-            $post->status = 'approval';
+            $post->status = 'post approval';
             $post->save();
         } else {
             return redirect('mod/post/list/post-i-manage');

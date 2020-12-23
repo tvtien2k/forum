@@ -66,7 +66,10 @@
                     </span>
                 </div>
                 <hr>
-                <!-- Post Content -->
+                <div>
+                    {!!$post->description!!}
+                </div>
+                <hr>
                 <div>
                     {!!$post->content!!}
                 </div>

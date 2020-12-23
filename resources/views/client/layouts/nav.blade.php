@@ -20,6 +20,11 @@
                 <li>
                     <a href="posts/popular">Popular</a>
                 </li>
+                @auth
+                    <li>
+                        <a href="posts/recommended">Recommended</a>
+                    </li>
+                @endauth
             </ul>
             @include('client.layouts.search')
             <ul class="nav navbar-nav pull-right">

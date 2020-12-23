@@ -61,7 +61,10 @@
                     </div>
                 </div>
                 <hr>
-                <!-- Post Content -->
+                <div>
+                    {!!$post->description!!}
+                </div>
+                <hr>
                 <div>
                     {!!$post->content!!}
                 </div>
@@ -71,7 +74,7 @@
                         @csrf
                         <input name="id" value="{{$post->id}}" hidden>
                         <div class="center-block">
-                            @if($post->status == 'approval')
+                            @if($post->status == 'post approval')
                                 <input name="action" type="submit" class="btn btn-primary" value="Approval">
                             @else
                                 <input name="action" type="submit" class="btn btn-primary" value="Disapproval">

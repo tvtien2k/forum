@@ -51,8 +51,9 @@ Route::get('/posts/new', [ClientController::class, 'getNewPosts']);
 Route::get('/posts/popular', [ClientController::class, 'getPopularPosts']);
 Route::get('/topic/{topic_slug}', [ClientController::class, 'getTopic']);
 Route::get('/category/{category_slug}', [ClientController::class, 'getCategory']);
-Route::get('/user/{id}', [ClientController::class, 'getUser']);
 Route::get('/search', [ClientController::class, 'getSearch']);
+Route::get('/posts/recommended', [ClientController::class, 'getRecommended'])->middleware('auth');
+Route::get('/user/{id}', [ClientController::class, 'getUser']);
 
 /*
 // insert data
@@ -72,6 +73,7 @@ Route::prefix('ajax')->group(function () {
 // member
 Route::prefix('member')->middleware('member')->group(function () {
     Route::get('/dashboard', [RedirectController::class, 'getMemberDashboard']);
+    Route::get('/recently', [\App\Http\Controllers\Member\PostController::class, 'getRecently']);
     Route::prefix('post')->group(function () {
         Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
         Route::post('/add', [\App\Http\Controllers\Member\PostController::class, 'postAddPost']);

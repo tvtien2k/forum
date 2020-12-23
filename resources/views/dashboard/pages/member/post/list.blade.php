@@ -74,17 +74,17 @@
                                             <td>{{$post->category->name}}</td>
                                             <td>{{$post->title}}</td>
                                             <td>
-                                                @if($post->status == 'display')
+                                                @if($post->status == 'post display')
                                                     <div class="alert alert-success">
-                                                        {{$post->status}}
+                                                        display
                                                     </div>
-                                                @elseif($post->status == 'update')
+                                                @elseif($post->status == 'post update')
                                                     <div class="alert alert-warning">
-                                                        {{$post->status}}
+                                                        update
                                                     </div>
-                                                @elseif($post->status == 'approval')
+                                                @elseif($post->status == 'post approval')
                                                     <div class="alert alert-danger">
-                                                        {{$post->status}}
+                                                        approval
                                                     </div>
                                                 @endif
                                             </td>

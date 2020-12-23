@@ -37,19 +37,58 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-8 col-md-8 col-md-offset-2">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Post is waiting for approval
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul class="timeline">
+                                @php
+                                    $i = 0;
+                                @endphp
+                                @foreach($posts as $post)
+                                    <li
+                                        @if($i%2==1)
+                                        class="timeline-inverted"
+                                        @endif
+                                    >
+                                        <div class="timeline-badge info"><i class="fa fa-check"></i>
+                                        </div>
+                                        <div class="timeline-panel">
+                                            <div class="timeline-heading">
+                                                <h4 class="timeline-title">
+                                                    <a href="mod/post/approval/{{$post->id}}">
+                                                        {{$post->title}}
+                                                    </a>
+                                                </h4>
+                                                <p>by {{$post->author->name}}</p>
+                                                <p>
+                                                    <small class="text-muted"><i class="fa fa-clock-o"></i>
+                                                        {{$post->created_at}}
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    {{ $posts->links() }}
+                </div>
+                <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Personal information
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-4">
-                                    <img class="img-responsive"
-                                         src="https://ui-avatars.com/api/?size=200&name={{substr(Auth::user()->name, 0, 1)}}"
-                                         alt="">
-                                </div>
-                                <div class="col-lg-8">
+                                <div class="col-lg-12">
                                     <p>
                                         <strong>Name: </strong> {{Auth::user()->name}}
                                     <p>
@@ -76,72 +115,6 @@
                             Personal information
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="hero-widget well well-sm">
-                        <div class="icon">
-                            <i class="glyphicon glyphicon-th-list"></i>
-                        </div>
-                        <div class="text">
-                            <span class="value">{{$count_category_i_manage}}</span>
-                            <label class="text-muted">Category I manage</label>
-                        </div>
-                        <div class="options">
-                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
-                                <i class="glyphicon glyphicon-search"></i> See more
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="hero-widget well well-sm">
-                        <div class="icon">
-                            <i class="glyphicon glyphicon-th"></i>
-                        </div>
-                        <div class="text">
-                            <span class="value">{{$count_post_i_manage}}</span>
-                            <label class="text-muted">Post I manage</label>
-                        </div>
-                        <div class="options">
-                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
-                                <i class="glyphicon glyphicon-search"></i> See more
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="hero-widget well well-sm">
-                        <div class="icon">
-                            <i class="glyphicon glyphicon-ok"></i>
-                        </div>
-                        <div class="text">
-                            <span class="value">{{$approved_post}}</span>
-                            <label class="text-muted">Approved post</label>
-                        </div>
-                        <div class="options">
-                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
-                                <i class="glyphicon glyphicon-search"></i> See more
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="hero-widget well well-sm">
-                        <div class="icon">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </div>
-                        <div class="text">
-                            <span class="value">{{$unapproved_post}}</span>
-                            <label class="text-muted">Unapproved post</label>
-                        </div>
-                        <div class="options">
-                            <a href="mod/post/list/post-i-manage" class="btn btn-default btn-lg">
-                                <i class="glyphicon glyphicon-search"></i> See more
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <div class="row">
@@ -149,7 +122,7 @@
                                     <i class="fa fa-table fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_all_my_post}}</div>
+                                    <div class="huge">{{$count_all_post}}</div>
                                     <div>All my post</div>
                                 </div>
                             </div>
@@ -162,8 +135,6 @@
                             </div>
                         </a>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-4">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -172,7 +143,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">{{$count_display_post}}</div>
-                                    <div>Public Post</div>
+                                    <div>My post has been approved</div>
                                 </div>
                             </div>
                         </div>
@@ -184,8 +155,6 @@
                             </div>
                         </a>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-4">
                     <div class="panel panel-red">
                         <div class="panel-heading">
                             <div class="row">
@@ -193,8 +162,8 @@
                                     <i class="fa fa-eye-slash fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_waiting_for_approval}}</div>
-                                    <div>Waiting for approval</div>
+                                    <div class="huge">{{$count_approval_post}}</div>
+                                    <div>My post is waiting for approval</div>
                                 </div>
                             </div>
                         </div>
@@ -202,12 +171,12 @@
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
                                 <div class="clearfix"></div>
                             </div>
                         </a>
                     </div>
                 </div>
-
             </div>
         </div>
         <!-- /.container-fluid -->

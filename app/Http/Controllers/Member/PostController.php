@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -18,6 +19,37 @@ class PostController extends Controller
             $id .= substr($v, 0, 1);
         }
         return strtoupper($id);
+    }
+
+    public function getRecently()
+    {
+        $posts = DB::table('tbl_post AS post')
+            ->whereIn('status', ['post display', 'post update'])
+            ->whereExists(function ($query) {
+                $query->from('tbl_post AS comment')
+                    ->whereRaw('comment.id LIKE CONCAT(post.id, "%")')
+                    ->where('comment.status', '=', 'comment')
+                    ->where('comment.author_id', '=', Auth::id());
+            })
+            ->latest()
+            ->paginate(4);
+        $count_all_post = Post::where('author_id', '=', Auth::id())
+                ->where('status', 'like', 'post%')
+                ->count() ?? 0;
+        $count_display_post = Post::where('author_id', '=', Auth::id())
+                ->whereIn('status', ['post display', 'post update'])
+                ->count() ?? 0;
+        $count_approval_post = Post::where('author_id', '=', Auth::id())
+                ->where('status', '=', 'post approval')
+                ->count() ?? 0;
+        return view('dashboard.pages.member.dashboard',
+            [
+                'title' => 'Recently',
+                'posts' => $posts,
+                'count_all_post' => $count_all_post,
+                'count_display_post' => $count_display_post,
+                'count_approval_post' => $count_approval_post,
+            ]);
     }
 
     public function getAddPost()
@@ -49,12 +81,12 @@ class PostController extends Controller
         }
         $post->id = $post_id;
         $post->content = $request->_content;
+        $post->description = $request->description;
         if ($post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
-            $post->status = 'display';
+            $post->status = 'post display';
         } else {
-            $post->status = 'approval';
+            $post->status = 'post approval';
         }
-        $post->is_post = true;
         $post->save();
         if (Auth::user()->level == 0) {
             return redirect('member/post/list')
@@ -70,7 +102,7 @@ class PostController extends Controller
     public function getListPost()
     {
         $posts = Post::where('author_id', '=', Auth::id())
-            ->where('is_post', '=', true)
+            ->where('status', 'like', 'post%')
             ->latest()
             ->get();
         return view('dashboard.pages.member.post.list', ['posts' => $posts]);
@@ -96,7 +128,7 @@ class PostController extends Controller
                 ->where('author_id', '=', Auth::id())
                 ->first());
         if (!$post) {
-            return abort(404);
+            abort(404);
         }
         return view('dashboard.pages.member.post.edit',
             [
@@ -115,15 +147,16 @@ class PostController extends Controller
         $post = Post::where('id', '=', $request->id)
             ->where('author_id', '=', Auth::id())
             ->first();
-        if ($post->status == 'approval' || $post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
+        if ($post->status == 'post approval' || $post->category->topic->mod_id == $post->author_id || Auth::user()->level == 2) {
             $post->category_id = $request->category_id;
             $post->title = $request->title;
             $post->slug = $request->slug;
             $post->content = $request->_content;
+            $post->description = $request->description;
             $post->save();
         } else {
-            if ($post->status == 'display') {
-                $post->status = 'update';
+            if ($post->status == 'post display') {
+                $post->status = 'post update';
                 $post->save();
             }
             $post_update = Post::find($post->id . '_UPDATE') ?? new Post();
@@ -133,8 +166,8 @@ class PostController extends Controller
             $post_update->title = $request->title;
             $post_update->slug = $request->slug;
             $post_update->content = $request->_content;
-            $post_update->status = 'approval';
-            $post_update->is_post = false;
+            $post_update->description = $request->description;
+            $post_update->status = 'update';
             $post_update->save();
         }
         return back()->with('status', 'Edit successfully!');
@@ -154,15 +187,13 @@ class PostController extends Controller
             return abort(404);
         }
         $related_posts = Post::where('category_id', '=', $post->category_id)
-            ->where('status', '<>', 'approval')
-            ->where('is_post', '=', true)
+            ->whereIn('status', ['post display', 'post update'])
             ->where('id', '<>', $post->id)
             ->take(3)
             ->latest()
             ->get();
         $new_posts = Post::where('status', '<>', 'approval')
-            ->where('id', '<>', $post->id)
-            ->where('is_post', '=', true)
+            ->whereIn('status', ['post display', 'post update'])
             ->take(3)
             ->latest()
             ->get();

@@ -8,6 +8,7 @@ use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use function Livewire\str;
 
 class ClientController extends Controller
@@ -129,7 +130,6 @@ class ClientController extends Controller
             [
                 'title' => 'Topic: ' . $topic->name,
                 'topics' => $topics,
-                'topic' => $topic,
                 'posts' => $posts
             ]);
     }
@@ -150,7 +150,6 @@ class ClientController extends Controller
             [
                 'title' => 'Category: ' . $category->name,
                 'topics' => $topics,
-                'category' => $category,
                 'posts' => $posts
             ]);
     }
@@ -167,7 +166,42 @@ class ClientController extends Controller
             [
                 'title' => 'Search: ' . $request->key,
                 'topics' => $topics,
-                'key' => $request->key,
+                'posts' => $posts
+            ]);
+    }
+
+    public function getRecommended()
+    {
+        $topics = Topic::all();
+        $recently = DB::table('tbl_post AS post')
+            ->whereIn('status', ['post display', 'post update'])
+            ->whereExists(function ($query) {
+                $query->from('tbl_post AS comment')
+                    ->whereRaw('comment.id LIKE CONCAT(post.id, "%")')
+                    ->where('comment.status', '=', 'comment')
+                    ->where('comment.author_id', '=', Auth::id());
+            })
+            ->latest()
+            ->take(6)
+            ->get();
+        $arr_category_id = [];
+        foreach ($recently as $post) {
+            array_push($arr_category_id, $post->category_id);
+        }
+        $posts =
+            (Post::whereIn('category_id', $arr_category_id)
+                ->whereIn('status', ['post display', 'post update'])
+                ->latest()
+                ->paginate(10))
+            ??
+            (Post::whereIn('status', ['post display', 'post update'])
+                ->orderBy('view', 'desc')
+                ->latest()
+                ->paginate(10));
+        return view('client.pages.posts',
+            [
+                'title' => 'Recommended',
+                'topics' => $topics,
                 'posts' => $posts
             ]);
     }
