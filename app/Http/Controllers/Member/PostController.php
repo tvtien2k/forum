@@ -70,7 +70,7 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->title = $request->title;
         $post->slug = $request->slug;
-        $post_latest = Post::where('is_post', '=', true)
+        $post_latest = Post::where('status', 'like', 'post%')
             ->latest()
             ->first();
         if ($post_latest) {
