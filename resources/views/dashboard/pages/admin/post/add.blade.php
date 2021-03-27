@@ -1,6 +1,6 @@
 @extends('dashboard.index')
 
-@section('title', 'Edit Post')
+@section('title', 'Create Post')
 
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -36,7 +36,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Edit Post</h1>
+                    <h1 class="page-header">Create Post</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -53,64 +53,44 @@
                             </ul>
                         </div>
                     @endif
-                    @if (session('status'))
-                        <div class="alert alert-info alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{session('status')}}
-                        </div>
-                    @endif
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Form Edit Post
+                            Form Create Post
                         </div>
                         <div class="panel-body">
-                            <form role="form" method="post" action="member/post/edit">
+                            <form role="form" method="post" action="admin/manage-post/add">
                                 @csrf
-                                <input name="id" value="{{$post->id}}" hidden>
                                 <div class="row">
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-9">
                                         <div class="form-group">
                                             <label>Title</label>
                                             <input class="form-control" id="title" onkeyup="ChangeToSlug();"
-                                                   name="title" value="{{$post->title}}" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="description" class="form-control"
-                                                      rows="2" required>{{$post->description}}</textarea>
+                                                   name="title" value="{{ old('title') }}" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Content</label>
-                                            <textarea id="_content" name="_content">{{$post->content}}</textarea>
+                                            <textarea name="_content">{{ old('_content') }}</textarea>
                                         </div>
                                     </div>
                                     <!-- /.col-lg-6 (nested) -->
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label>Slug</label>
-                                            <input class="form-control" id="slug" name="slug" value="{{$post->slug}}"
+                                            <input class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
                                                    required>
                                         </div>
                                         <div class="form-group">
                                             <label>Select Topic</label>
                                             <select class="form-control" id="topic_id" name="topic_id"
                                                     onchange="getCategory();">
-                                                <option value="{{$post->category->topic->id}}">
-                                                    {{$post->category->topic->name}}
-                                                </option>
                                                 @foreach($topics as $topic)
-                                                    @if($post->category->topic->id != $topic->id)
-                                                        <option value="{{$topic->id}}">{{$topic->name}}</option>
-                                                    @endif
+                                                    <option value="{{$topic->id}}">{{$topic->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label>Select Category</label>
                                             <select class="form-control" id="category_id" name="category_id">
-                                                <option value="{{$post->category->id}}">
-                                                    {{$post->category->name}}
-                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -118,7 +98,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <button type="submit" class="btn btn-default">Update</button>
+                                        <button type="submit" class="btn btn-default">Create</button>
                                         <button type="reset" class="btn btn-default">Reset</button>
                                     </div>
                                 </div>
@@ -152,7 +132,7 @@
 
     <script>
         tinymce.init({
-            selector: '#_content',
+            selector: 'textarea',
             plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
             toolbar_mode: 'floating',
         });
@@ -203,15 +183,16 @@
             var topic_id = $("#topic_id").val();
             $.ajax({
                 type: "get",
-                url: "ajax/getCategory/" + topic_id,
+                url: "admin/manage-post/get-category/" + topic_id,
                 success: function (res) {
                     $("#category_id").html(res);
                 }
             });
         }
 
-        $(document).ready(function ($) {
+        $(document).ready(function () {
             ChangeToSlug();
+            getCategory();
         });
     </script>
 @endsection

@@ -131,8 +131,8 @@
                                     <i class="fa fa-table fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_all_post}}</div>
-                                    <div>All my post</div>
+                                    <div class="huge">{{$my_posts_count}}</div>
+                                    <div>All my posts</div>
                                 </div>
                             </div>
                         </div>
@@ -151,8 +151,8 @@
                                     <i class="fa fa-eye fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_display_post}}</div>
-                                    <div>Post has been approved</div>
+                                    <div class="huge">{{$my_public_posts_count}}</div>
+                                    <div>All my public posts</div>
                                 </div>
                             </div>
                         </div>
@@ -171,8 +171,8 @@
                                     <i class="fa fa-eye-slash fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">{{$count_approval_post}}</div>
-                                    <div>Post is waiting for approval</div>
+                                    <div class="huge">{{$my_approval_posts_count}}</div>
+                                    <div>All my await approval posts</div>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +180,6 @@
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-
                                 <div class="clearfix"></div>
                             </div>
                         </a>

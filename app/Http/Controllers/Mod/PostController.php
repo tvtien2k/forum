@@ -21,31 +21,11 @@ class PostController extends Controller
         return view('dashboard.pages.mod.post.my-post', ['posts' => $posts]);
     }
 
-    public function getPostIManage()
+    public function getPostIManage(Request $request)
     {
         $topic = Topic::where('mod_id', '=', Auth::id())
             ->first();
-        $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
-            ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
-            ->where('tbl_topic.id', '=', $topic->id)
-            ->where('status', 'like', 'post%')
-            ->select('tbl_post.*')
-            ->orderBy('tbl_post.created_at', 'desc')
-            ->latest()
-            ->get();
-        return view('dashboard.pages.mod.post.post-i-manage',
-            [
-                'topic' => $topic,
-                'category_id' => '',
-                'posts' => $posts
-            ]);
-    }
-
-    public function postPostIManage(Request $request)
-    {
-        $topic = Topic::where('mod_id', '=', Auth::id())
-            ->first();
-        if ($request->category_id == "All") {
+        if (empty($request->category_id) || $request->category_id == 'All') {
             $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
                 ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
                 ->where('tbl_topic.id', '=', $topic->id)
@@ -63,7 +43,7 @@ class PostController extends Controller
         return view('dashboard.pages.mod.post.post-i-manage',
             [
                 'topic' => $topic,
-                'category_id' => $request->category_id,
+                'category_id' => '',
                 'posts' => $posts
             ]);
     }

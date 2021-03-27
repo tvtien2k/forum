@@ -1,6 +1,6 @@
 @extends('dashboard.index')
 
-@section('title', 'Edit Post')
+@section('title', 'Create Post')
 
 @section('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,6 +15,7 @@
 
     <!-- Custom Fonts -->
     <link href="assets_dashboard/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="assets_dashboard/css/free.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,11 +25,12 @@
     <![endif]-->
 
     <!-- jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <!-- Tiny -->
-    <script src="https://cdn.tiny.cloud/1/hdeyuuwa87xv4l8rh9se9bd7ze213rdiibh73cg19yqswf8j/tinymce/5/tinymce.min.js"
-            referrerpolicy="origin"></script>
+    <script>
+        import Button from "../../../../../js/Jetstream/Button";
+        export default {
+            components: {Button}
+        }
+    </script>
 @endsection
 
 @section('content')
@@ -36,13 +38,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Edit Post</h1>
+                    <h1  class="page-header"> Add topic</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-8">
                     @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -53,81 +55,86 @@
                             </ul>
                         </div>
                     @endif
-                    @if (session('status'))
-                        <div class="alert alert-info alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            {{session('status')}}
+                    @if(session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
                         </div>
                     @endif
-                    <div class="panel panel-default">
+                    <div  class="panel panel-default">
                         <div class="panel-heading">
-                            Form Edit Post
+                            <i class="far fa-plus-square"></i>  Form Add Topic
                         </div>
                         <div class="panel-body">
-                            <form role="form" method="post" action="member/post/edit">
+                            <form role="form" method="post" action="admin/manage-topic/post-add">
                                 @csrf
-                                <input name="id" value="{{$post->id}}" hidden>
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <div class="form-group">
-                                            <label>Title</label>
-                                            <input class="form-control" id="title" onkeyup="ChangeToSlug();"
-                                                   name="title" value="{{$post->title}}" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="description" class="form-control"
-                                                      rows="2" required>{{$post->description}}</textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Content</label>
-                                            <textarea id="_content" name="_content">{{$post->content}}</textarea>
+                                            <label>Name</label>
+                                            <input style="width: 300px" class="form-control" id="name" onkeyup="ChangeToSlug();"
+                                                   name="name" value="{{ old('name') }}" required>
                                         </div>
                                     </div>
                                     <!-- /.col-lg-6 (nested) -->
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <label>Slug</label>
-                                            <input class="form-control" id="slug" name="slug" value="{{$post->slug}}"
-                                                   required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Select Topic</label>
-                                            <select class="form-control" id="topic_id" name="topic_id"
-                                                    onchange="getCategory();">
-                                                <option value="{{$post->category->topic->id}}">
-                                                    {{$post->category->topic->name}}
-                                                </option>
-                                                @foreach($topics as $topic)
-                                                    @if($post->category->topic->id != $topic->id)
-                                                        <option value="{{$topic->id}}">{{$topic->name}}</option>
-                                                    @endif
+                                            <label>Select Mod id</label>
+
+                                            <select class="form-control" id="topic_id" name="mod_id">
+                                                @foreach($user as $u)
+                                                    <option>{{$u->name}}</option>
                                                 @endforeach
                                             </select>
+
                                         </div>
+                                    </div>
+                                    <div class="col-lg-8">
                                         <div class="form-group">
-                                            <label>Select Category</label>
-                                            <select class="form-control" id="category_id" name="category_id">
-                                                <option value="{{$post->category->id}}">
-                                                    {{$post->category->name}}
-                                                </option>
-                                            </select>
+                                            <label>Slug</label>
+                                            <input style="width: 300px" class="form-control" class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
+                                                   required>
                                         </div>
                                     </div>
                                     <!-- /.col-lg-6 (nested) -->
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <button type="submit" class="btn btn-default">Update</button>
-                                        <button type="reset" class="btn btn-default">Reset</button>
-                                    </div>
-                                </div>
+                                <button style="margin-left: 510px;border-width: 2px;background: #f5f5f5;" type="submit" class="btn btn-default">Add New
+                                </button>
+
                             </form>
                             <!-- /.row (nested) -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
+                </div>
+                <div  class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-twitter fa-fw"></i>Information admin
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a  class="list-group-item">
+                                    <i></i> Name :{{Auth::user()->name}}
+                                </a>
+                                <a  class="list-group-item">
+                                    <i></i> Email:{{Auth::user()->email}}
+                                </a>
+                                <a  class="list-group-item">
+                                    <i></i> Gender:{{Auth::user()->gender}}
+                                </a>
+                                <a  class="list-group-item">
+                                    <i></i> Birthday:{{Auth::user()->birthday}}
+                                </a>
+                            </div>
+                            <!-- /.list-group -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <!-- /.panel -->
+                    <!-- /.panel .chat-panel -->
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -150,24 +157,15 @@
     <!-- Custom Theme JavaScript -->
     <script src="assets_dashboard/js/startmin.js"></script>
 
-    <script>
-        tinymce.init({
-            selector: '#_content',
-            plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-            toolbar_mode: 'floating',
-        });
-    </script>
-
+    <!-- ckeditor5 -->
+    <script src="ckeditor5/build/ckeditor.js"></script>
     <script>
         function ChangeToSlug() {
-            var title, slug;
-
+            var name, slug;
             //Lấy text từ thẻ input title
-            title = document.getElementById("title").value;
-
+            name = document.getElementById("name").value;
             //Đổi chữ hoa thành chữ thường
-            slug = title.toLowerCase();
-
+            slug = name.toLowerCase();
             //Đổi ký tự có dấu thành không dấu
             slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
             slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
@@ -192,26 +190,5 @@
             //In slug ra textbox có id “slug”
             document.getElementById('slug').value = slug;
         }
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        function getCategory() {
-            var topic_id = $("#topic_id").val();
-            $.ajax({
-                type: "get",
-                url: "ajax/getCategory/" + topic_id,
-                success: function (res) {
-                    $("#category_id").html(res);
-                }
-            });
-        }
-
-        $(document).ready(function ($) {
-            ChangeToSlug();
-        });
     </script>
 @endsection

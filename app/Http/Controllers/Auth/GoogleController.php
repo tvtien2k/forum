@@ -52,4 +52,37 @@ class GoogleController extends Controller
             dd($e->getMessage());
         }
     }
+    public function checkLogin(Request $request){
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+            $auth=User::find(Auth::user()->id);
+            if($auth->isBan==NULL){
+                return redirect('admin/dashboard');
+            }
+            $auth=explode("/",$auth->isBan);
+            $dateNow=getdate();
+            if($auth[2]>$dateNow['year']){
+                $auth=implode("-",$auth);
+                session()->flash('ban', 'Account is banned until date '.$auth);
+                return view('auth.login');
+            }
+            if($auth[2]==$dateNow['year']){
+                if($auth[1]>$dateNow['mon']){
+                    $auth=implode("-",$auth);
+                    session()->flash('ban', 'Account is banned until date '.$auth);
+                    return view('auth.login');
+                }
+                if($auth[1]==$dateNow['mon']){
+                    if($auth[0]>$dateNow['mday']||$auth[0]==$dateNow['mday']){
+                        $auth=implode("-",$auth);
+                        session()->flash('ban', 'Account is banned until date '.$auth);
+                        return view('auth.login');
+                    }
+                }
+            }
+        }
+        else{
+            return view('auth.login');
+        }
+    }
 }

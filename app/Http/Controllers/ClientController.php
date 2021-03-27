@@ -35,7 +35,7 @@ class ClientController extends Controller
         if (!$post) {
             abort(404);
         }
-        $ss_post = session('POST');
+        $ss_post = session('POST') ?? [];
         if ($ss_post) {
             if (!in_array($post->id, $ss_post)) {
                 array_push($ss_post, $post->id);

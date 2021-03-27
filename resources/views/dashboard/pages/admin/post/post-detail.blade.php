@@ -83,15 +83,6 @@
                            data-author="{{$post->author->name}}" href="#">
                             <span class="glyphicon glyphicon-flag"></span>
                         </a>
-                        @auth
-                            @if((Auth::user()->level == 2)&&($post->author_id!=Auth::id()))
-                                <a class="btn pull-right" data-toggle="modal" data-target="#action"
-                                   data-id="{{$post->id}}" data-iscmt="0"
-                                   data-author="{{$post->author_id}}" href="#">
-                                    <span class="glyphicon glyphicon-option-horizontal"></span>
-                                </a>
-                            @endif
-                        @endauth
                     </div>
                     <div class="well form-reply" id="form-reply-{{$post->id}}">
                         <h4>Comment ...<span class="glyphicon glyphicon-pencil"></span></h4>
@@ -147,15 +138,6 @@
                                        data-author="{{$comment->author->name}}" href="#">
                                         <span class="glyphicon glyphicon-flag"></span>
                                     </a>
-                                    @auth
-                                        @if((Auth::user()->level == 2)&&($comment->author_id!=Auth::id()))
-                                            <a class="btn pull-right" data-toggle="modal" data-target="#action"
-                                               data-id="{{$comment->id}}" data-iscmt="1"
-                                               data-author="{{$comment->author_id}}" href="#">
-                                                <span class="glyphicon glyphicon-option-horizontal"></span>
-                                            </a>
-                                        @endif
-                                    @endauth
                                 </div>
                                 <div class="well form-reply" id="form-reply-{{$comment->id}}" hidden>
                                     <h4>Comment ...<span class="glyphicon glyphicon-pencil"></span></h4>
@@ -199,45 +181,6 @@
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="action" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        @csrf
-                        <div class="modal-body">
-                            <form method="get" action="admin/manage-user/ban_in_client/">
-                                @csrf
-                                <input class="author" type="hidden" name="author">
-                                <div class="row">
-                                    <div class="col text-center">
-                                        <button type="submit" class="btn btn-primary text-center">Ban user</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <form method="get" action="admin/manage-post/delete_in_client/">
-                                @csrf
-                                <input class="id" type="hidden" name="id">
-                                <input class="iscmt" type="hidden" name="iscmt">
-                                <div class="row">
-                                    <div class="col text-center">
-                                        <button onclick="return confirm('Do you really want to delete the comment, press ok ' +
-                             ' to confirm?');" class="btn btn-primary">Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -301,29 +244,24 @@
     <script src="assets_client/js/my.js"></script>
     <script>
         $('#report').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var author = button.data('author');
-            var modal = $(this);
-            modal.find('.modal-title').text('Report ' + author);
-            modal.find('input.id').val(id);
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var author = button.data('author')
+            var modal = $(this)
+            modal.find('.modal-title').text('Report ' + author)
+            modal.find('input.id').val(id)
         });
-        $('#action').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var author = button.data('author');
-            var iscmt = button.data('iscmt');
-            var modal = $(this);
-            modal.find('input.id').val(id);
-            modal.find('input.author').val(author);
-            modal.find('input.iscmt').val(iscmt);
-        });
+    </script>
+
+    <script>
         tinymce.init({
             selector: 'textarea',
             plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
             toolbar_mode: 'floating',
         });
+    </script>
 
+    <script>
         function showFormCmt(btn_id) {
             var forms = document.getElementsByClassName("form-reply");
             for (var i = 0; i < forms.length; i++) {

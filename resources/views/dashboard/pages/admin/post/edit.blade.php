@@ -64,7 +64,7 @@
                             Form Edit Post
                         </div>
                         <div class="panel-body">
-                            <form role="form" method="post" action="member/post/edit">
+                            <form role="form" method="post" action="admin/manage-post/edit">
                                 @csrf
                                 <input name="id" value="{{$post->id}}" hidden>
                                 <div class="row">
@@ -75,13 +75,8 @@
                                                    name="title" value="{{$post->title}}" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="description" class="form-control"
-                                                      rows="2" required>{{$post->description}}</textarea>
-                                        </div>
-                                        <div class="form-group">
                                             <label>Content</label>
-                                            <textarea id="_content" name="_content">{{$post->content}}</textarea>
+                                            <textarea name="_content">{{$post->content}}</textarea>
                                         </div>
                                     </div>
                                     <!-- /.col-lg-6 (nested) -->
@@ -152,7 +147,7 @@
 
     <script>
         tinymce.init({
-            selector: '#_content',
+            selector: 'textarea',
             plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
             toolbar_mode: 'floating',
         });
@@ -203,7 +198,7 @@
             var topic_id = $("#topic_id").val();
             $.ajax({
                 type: "get",
-                url: "ajax/getCategory/" + topic_id,
+                url: "admin/manage-post/getCategory/" + topic_id,
                 success: function (res) {
                     $("#category_id").html(res);
                 }

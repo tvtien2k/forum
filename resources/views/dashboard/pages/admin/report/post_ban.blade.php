@@ -222,7 +222,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <form method="get" action="admin/manage-post/delete_in_client/">
+                            <form method="get" action="admin/manage-post/delete/">
                                 @csrf
                                 <input class="id" type="hidden" name="id">
                                 <input class="iscmt" type="hidden" name="iscmt">

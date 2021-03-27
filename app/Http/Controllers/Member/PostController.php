@@ -33,22 +33,63 @@ class PostController extends Controller
             })
             ->latest()
             ->paginate(4);
-        $count_all_post = Post::where('author_id', '=', Auth::id())
+        $my_posts_count = Post::where('author_id', '=', Auth::id())
                 ->where('status', 'like', 'post%')
                 ->count() ?? 0;
-        $count_display_post = Post::where('author_id', '=', Auth::id())
+        $my_public_posts_count = Post::where('author_id', '=', Auth::id())
                 ->whereIn('status', ['post display', 'post update'])
                 ->count() ?? 0;
-        $count_approval_post = Post::where('author_id', '=', Auth::id())
+        $my_approval_posts_count = Post::where('author_id', '=', Auth::id())
                 ->where('status', '=', 'post approval')
                 ->count() ?? 0;
         return view('dashboard.pages.member.dashboard',
             [
                 'title' => 'Recently',
                 'posts' => $posts,
-                'count_all_post' => $count_all_post,
-                'count_display_post' => $count_display_post,
-                'count_approval_post' => $count_approval_post,
+                'my_posts_count' => $my_posts_count,
+                'my_public_posts_count' => $my_public_posts_count,
+                'my_approval_posts_count' => $my_approval_posts_count,
+            ]);
+    }
+
+    public function getListPost()
+    {
+        $posts = Post::where('author_id', '=', Auth::id())
+            ->where('status', 'like', 'post%')
+            ->latest()
+            ->get();
+        return view('dashboard.pages.member.post.list', ['posts' => $posts]);
+    }
+
+    public function getViewPost(Request $request)
+    {
+        $post =
+            (Post::where('id', '=', $request->id . '_UPDATE')
+                ->where('author_id', '=', Auth::id())
+                ->first())
+            ??
+            (Post::where('id', '=', $request->id)
+                ->where('author_id', '=', Auth::id())
+                ->first());
+        if (!$post) {
+            abort(404);
+        }
+        $related_posts = Post::where('category_id', '=', $post->category_id)
+            ->whereIn('status', ['post display', 'post update'])
+            ->where('id', '<>', $post->id)
+            ->take(3)
+            ->latest()
+            ->get();
+        $new_posts = Post::where('status', '<>', 'approval')
+            ->whereIn('status', ['post display', 'post update'])
+            ->take(3)
+            ->latest()
+            ->get();
+        return view('dashboard.pages.member.post.view',
+            [
+                'post' => $post,
+                'related_posts' => $related_posts,
+                'new_posts' => $new_posts
             ]);
     }
 
@@ -97,15 +138,6 @@ class PostController extends Controller
         }
         return redirect('admin/post/list')
             ->with('status', 'Post successfully created!');
-    }
-
-    public function getListPost()
-    {
-        $posts = Post::where('author_id', '=', Auth::id())
-            ->where('status', 'like', 'post%')
-            ->latest()
-            ->get();
-        return view('dashboard.pages.member.post.list', ['posts' => $posts]);
     }
 
     public function postDeletePost(Request $request)
@@ -173,37 +205,6 @@ class PostController extends Controller
         return back()->with('status', 'Edit successfully!');
     }
 
-    public function getViewPost(Request $request)
-    {
-        $post =
-            (Post::where('id', '=', $request->id . '_UPDATE')
-                ->where('author_id', '=', Auth::id())
-                ->first())
-            ??
-            (Post::where('id', '=', $request->id)
-                ->where('author_id', '=', Auth::id())
-                ->first());
-        if (!$post) {
-            return abort(404);
-        }
-        $related_posts = Post::where('category_id', '=', $post->category_id)
-            ->whereIn('status', ['post display', 'post update'])
-            ->where('id', '<>', $post->id)
-            ->take(3)
-            ->latest()
-            ->get();
-        $new_posts = Post::where('status', '<>', 'approval')
-            ->whereIn('status', ['post display', 'post update'])
-            ->take(3)
-            ->latest()
-            ->get();
-        return view('dashboard.pages.member.post.view',
-            [
-                'post' => $post,
-                'related_posts' => $related_posts,
-                'new_posts' => $new_posts
-            ]);
-    }
 
     public function postComment(Request $request)
     {

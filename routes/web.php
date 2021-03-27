@@ -7,6 +7,7 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\RedirectController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\Admin\TopicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,9 +40,10 @@ Route::post('/email/verification-notification', function (Request $request) {
 // google auth
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+//Route::get('auth/login', [GoogleController::class, 'checkLogin']);
 
 // redirect
-Route::get('redirect', [RedirectController::class, 'redirectLogin']);
+Route::get('redirect', [RedirectController::class, 'checkLogin']);
 
 // client
 Route::get('/', [ClientController::class, 'getHome']);
@@ -75,10 +77,10 @@ Route::prefix('member')->middleware('member')->group(function () {
     Route::get('/dashboard', [RedirectController::class, 'getMemberDashboard']);
     Route::get('/recently', [\App\Http\Controllers\Member\PostController::class, 'getRecently']);
     Route::prefix('post')->group(function () {
-        Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
-        Route::post('/add', [\App\Http\Controllers\Member\PostController::class, 'postAddPost']);
         Route::get('/list', [\App\Http\Controllers\Member\PostController::class, 'getListPost']);
         Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
+        Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
+        Route::post('/add', [\App\Http\Controllers\Member\PostController::class, 'postAddPost']);
         Route::get('/edit/{id}', [\App\Http\Controllers\Member\PostController::class, 'getEditPost']);
         Route::post('/edit', [\App\Http\Controllers\Member\PostController::class, 'postEditPost']);
         Route::post('/comment', [\App\Http\Controllers\Member\PostController::class, 'postComment']);
@@ -99,12 +101,12 @@ Route::prefix('member')->middleware('member')->group(function () {
 // mod
 Route::prefix('mod')->middleware('mod')->group(function () {
     Route::get('/dashboard', [RedirectController::class, 'getModDashboard']);
+    Route::get('/recently', [\App\Http\Controllers\Member\PostController::class, 'getRecently']);
     Route::prefix('post')->group(function () {
         Route::get('/add', [\App\Http\Controllers\Member\PostController::class, 'getAddPost']);
         Route::get('list', [\App\Http\Controllers\Mod\PostController::class, 'getMyPost']);
         Route::get('list/my-post', [\App\Http\Controllers\Mod\PostController::class, 'getMyPost']);
         Route::get('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'getPostIManage']);
-        Route::post('list/post-i-manage', [\App\Http\Controllers\Mod\PostController::class, 'postPostIManage']);
         Route::get('/view/{id}', [\App\Http\Controllers\Member\PostController::class, 'getViewPost']);
         Route::get('/approval/{id}', [\App\Http\Controllers\Mod\PostController::class, 'getApprovalPost']);
         Route::post('/approval', [\App\Http\Controllers\Mod\PostController::class, 'postApprovalPost']);
@@ -116,9 +118,63 @@ Route::prefix('mod')->middleware('mod')->group(function () {
     });
 });
 
-//admin
+//Admin
 Route::prefix('admin')->middleware('admin')->group(function () {
-    Route::get('/', function () {
-        return "admin";
+    Route::get('dashboard/{id?}', [RedirectController::class, 'getAdminDashboard']);
+    Route::prefix('manage-post')->group(function () {
+        Route::get('get-category/{topic_id}', [\App\Http\Controllers\Admin\PostController::class, 'getCategory']);
+        Route::get('list/my-post', [\App\Http\Controllers\Admin\PostController::class, 'getMyPost']);
+        Route::get('list/post-i-manage/{id?}', [\App\Http\Controllers\Admin\PostController::class, 'showPost']);
+        Route::post('list/post-i-manage/{id?}', [\App\Http\Controllers\Admin\PostController::class, 'filter']);
+        Route::get('/add', [\App\Http\Controllers\Admin\PostController::class, 'getAddPost']);
+        Route::post('/add', [\App\Http\Controllers\Admin\PostController::class, 'postAddPost']);
+        Route::get('/edit/{id}', [\App\Http\Controllers\Admin\PostController::class, 'getEditPost']);
+        Route::post('/edit', [\App\Http\Controllers\Admin\PostController::class, 'postEditPost']);
+        Route::get('/delete', [\App\Http\Controllers\Admin\PostController::class, 'postDeletePost']);
+        Route::get('/view-post/{id}', [\App\Http\Controllers\Admin\PostController::class, 'viewDetail']);
+        Route::get('delete_in_client', [\App\Http\Controllers\Admin\PostController::class, 'deleteInClient']);
+        Route::get('view-post-r', [\App\Http\Controllers\Admin\PostController::class, 'deleteInAdmin']);
     });
+    Route::prefix('manage-topic')->group(function () {
+        Route::get('view', [TopicController::class, 'viewTopic']);
+        Route::get('get-add', [TopicController::class, 'getAddTopic']);
+        Route::post('post-add', [TopicController::class, 'postAddTopic']);
+        Route::post('delete/{id}', [TopicController::class, 'delete']);
+        Route::get('get-edit/{id}', [TopicController::class, 'getEdit']);
+        Route::post('post-edit/{id}', [TopicController::class, 'postEdit']);
+    });
+    Route::prefix('manage-category')->group(function () {
+        Route::get('view', [\App\Http\Controllers\Admin\CategoryController::class, 'viewCate']);
+        Route::get('get-add', [\App\Http\Controllers\Admin\CategoryController::class, 'getAddCate']);
+        Route::post('post-add', [\App\Http\Controllers\Admin\CategoryController::class, 'postAddCate']);
+        Route::get('get-edit/{id}', [\App\Http\Controllers\Admin\CategoryController::class, 'getEdit']);
+        Route::post('post-edit/{id}', [\App\Http\Controllers\Admin\CategoryController::class, 'postEdit']);
+        Route::post('delete/{id}', [\App\Http\Controllers\Admin\CategoryController::class, 'delete']);
+        Route::post('filter', [\App\Http\Controllers\Admin\CategoryController::class, 'filter']);
+    });
+    Route::prefix('manage-user')->group(function () {
+        Route::get('view', [\App\Http\Controllers\Admin\UserController::class, 'viewUser']);
+        Route::get('get-edit/{idU}', [\App\Http\Controllers\Admin\UserController::class, 'getEdit']);
+        Route::post('post-edit/{idU}', [\App\Http\Controllers\Admin\UserController::class, 'postEdit']);
+        Route::post('delete/{idU}', [\App\Http\Controllers\Admin\UserController::class, 'delete']);
+        Route::get('view-post/{id}', [\App\Http\Controllers\Admin\UserController::class, 'viewPost']);
+        Route::post('ban/{idUser}', [\App\Http\Controllers\Admin\UserController::class, 'banUser']);
+        Route::get('ban_in_client', [\App\Http\Controllers\Admin\UserController::class, 'banUserInClient']);
+    });
+    Route::prefix('manage-report')->group(function () {
+        Route::get('view', [\App\Http\Controllers\Admin\ReportController::class, 'viewReport']);
+        Route::get('view-post/{id}', [\App\Http\Controllers\Admin\ReportController::class, 'viewPost']);
+        Route::post('month', [\App\Http\Controllers\Admin\ReportController::class, 'getMonth']);
+
+    });
+    Route::prefix('/account')->group(function () {
+        Route::get('/profile', [\App\Http\Controllers\Admin\AccountControllers::class, 'getProfile']);
+        Route::post('/profile', [\App\Http\Controllers\Admin\AccountControllers::class, 'postProfile']);
+        Route::get('/security', [\App\Http\Controllers\Admin\AccountControllers::class, 'getSecurity']);
+        Route::get('/forgot-password', [\App\Http\Controllers\Admin\AccountControllers::class, 'getForgotPassword']);
+        Route::post('/change-password', [\App\Http\Controllers\Admin\AccountControllers::class, 'postChangePassword']);
+    });
+
 });
+
+

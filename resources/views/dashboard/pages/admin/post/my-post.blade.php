@@ -54,52 +54,20 @@
                         <div class="panel-body">
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
-                                <li>
-                                    <a href="mod/post/list/my-post">My post</a>
-                                </li>
                                 <li class="active">
-                                    <a href="#postOnTopic" data-toggle="tab">Post I manage</a>
+                                    <a href="#myPost" data-toggle="tab">My post</a>
+                                </li>
+                                <li>
+                                    <a href="admin/manage-post/list/post-i-manage">Post I manage</a>
                                 </li>
                             </ul>
 
                             <!-- Tab panes -->
                             <div class="tab-content">
-                                <div class="tab-pane fade" id="myPost">
-                                </div>
-                                <div class="tab-pane fade in active" id="postOnTopic">
+                                <div class="tab-pane fade in active" id="myPost">
                                     <br>
                                     <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <form class="form-inline" role="form" method="get"
-                                                  action="mod/post/list/post-i-manage">
-                                                <div class="form-group">
-                                                    <label>Topic: </label>
-                                                    <select class="form-control" disabled>
-                                                        <option>{{$topic->name}}</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Category: </label>
-                                                    <select class="form-control" name="category_id">
-                                                        <option>All</option>
-                                                        @foreach($topic->categories as $category)
-                                                            @if($category_id == $category->id)
-                                                                <option value="{{$category->id}}" selected>
-                                                                    {{$category->name}}
-                                                                </option>
-                                                            @else
-                                                                <option value="{{$category->id}}">
-                                                                    {{$category->name}}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-default">Search</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default">
+                                        <!-- /.panel-heading -->
                                         <div class="panel-body">
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered table-hover"
@@ -107,7 +75,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Author</th>
+                                                        <th>Topic</th>
                                                         <th>Category</th>
                                                         <th>Title</th>
                                                         <th>Status</th>
@@ -115,39 +83,52 @@
                                                         <th>Created at</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody id="post-i-manage">
+                                                    <tbody>
                                                     @foreach($posts as $post)
                                                         <tr>
                                                             <td>{{$post->id}}</td>
-                                                            <td>
-                                                                <a href="user/{{$post->author->id}}">
-                                                                    {{$post->author->name}}
-                                                                </a>
-                                                            </td>
+                                                            <td>{{$post->category->topic->name}}</td>
                                                             <td>{{$post->category->name}}</td>
                                                             <td>{{$post->title}}</td>
                                                             <td>
-                                                                @if($post->status == 'post display')
+                                                                @if($post->status == 'display')
                                                                     <div class="alert alert-success">
-                                                                        display
+                                                                        {{$post->status}}
                                                                     </div>
-                                                                @elseif($post->status == 'post update')
+                                                                @elseif($post->status == 'update')
                                                                     <div class="alert alert-warning">
-                                                                        update
+                                                                        {{$post->status}}
                                                                     </div>
-                                                                @elseif($post->status == 'post approval')
+                                                                @elseif($post->status == 'approval')
                                                                     <div class="alert alert-danger">
-                                                                        approval
+                                                                        {{$post->status}}
                                                                     </div>
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                <a href="mod/post/approval/{{$post->id}}">
+                                                                <a href="admin/manage-post/view-post/{{$post->id}}"
+                                                                   target="_blank">
                                                                     <button type="button"
                                                                             class="btn btn-success btn-circle">
                                                                         <i class="fa fa-eye"></i>
                                                                     </button>
                                                                 </a>
+                                                                <a href="admin/manage-post/edit/{{$post->id}}">
+                                                                    <button type="button"
+                                                                            class="btn btn-info btn-circle">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                </a>
+                                                                <form method="post" action="admin/manage-post/delete">
+                                                                    @csrf
+                                                                    <input name="id" value="{{$post->id}}"
+                                                                           hidden>
+                                                                    <button type="submit"
+                                                                            class="btn btn-danger btn-circle"
+                                                                            onclick="return confirm('Are you sure want to delete {{$post->title}}?');">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </form>
                                                             </td>
                                                             <td>{{$post->created_at}}</td>
                                                         </tr>
@@ -159,6 +140,8 @@
                                         </div>
                                         <!-- /.panel-body -->
                                     </div>
+                                </div>
+                                <div class="tab-pane fade" id="postOnTopic">
                                 </div>
                             </div>
                         </div>
@@ -196,7 +179,7 @@
         $(document).ready(function () {
             $('#dataTables-example').DataTable({
                 responsive: true,
-                order: [[4, "asc"]]
+                order: [[6, "desc"]]
             });
         });
     </script>
