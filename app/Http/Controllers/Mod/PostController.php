@@ -104,7 +104,7 @@ class PostController extends Controller
 
     public function postApprovalPost(Request $request)
     {
-
+        // this is tien
         if ($request->action == 'Approval') {
             $post_id = explode('-', $request->id)[0] . '-' . explode('_', explode('-', $request->id)[1])[0];
             $post = Post::find($post_id);
