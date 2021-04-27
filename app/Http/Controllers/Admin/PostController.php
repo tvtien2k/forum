@@ -24,11 +24,12 @@ class PostController extends Controller
         return strtoupper($id);
     }
 
-    public function getCategory(Request $request, $topic_id)
+    public function getCategory( $topic_id)
     {
         echo "<option value=" . 'all' . ">   </option>";
         $categories = Category::where('topic_id', '=', $topic_id)->get();
         foreach ($categories as $category) {
+
             echo "<option value=" . $category->id . ">" . $category->name . "</option>";
         }
 
@@ -115,7 +116,7 @@ class PostController extends Controller
     public function filter(Request $request, $id = null)
     {
         $topic = Topic::all();
-        $cate = Category::all();
+        $cate = DB::table('tbl_category')->where('topic_id','=',$request->topic)->get();
         $topicChoose = $request->topic;
         $categoryChoose = $request->category;
 
@@ -145,7 +146,8 @@ class PostController extends Controller
 
         } else {
 
-            if ($request->topic != 'NULL' && $request->category == 'all') {
+
+            if ($request->topic != 'NULL' && $request->category == 'all'||$request->category == 'NULL') {
                 $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
                     ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
                     ->where('tbl_topic.id', '=', $request->topic)

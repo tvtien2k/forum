@@ -23,12 +23,16 @@ class PostController extends Controller
 
     public function getPostIManage(Request $request)
     {
-        $topic = Topic::where('mod_id', '=', Auth::id())
-            ->first();
+        $topics = Topic::where('mod_id', '=', '2')
+            ->get();
+        $topic_id = [];
+        foreach ($topics as $topic) {
+            array_push($topic_id, $topic->id);
+        }
         if (empty($request->category_id) || $request->category_id == 'All') {
             $posts = Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
                 ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
-                ->where('tbl_topic.id', '=', $topic->id)
+                ->where('tbl_topic.id', '=', $topic_id)
                 ->where('status', 'like', 'post%')
                 ->select('tbl_post.*')
                 ->orderBy('tbl_post.created_at', 'desc')
@@ -50,18 +54,32 @@ class PostController extends Controller
 
     public function getApprovalPost(Request $request)
     {
-        $post =
-            (Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
-                ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
-                ->where('tbl_post.id', '=', $request->id . '_UPDATE')
-                ->where('tbl_topic.mod_id', '=', Auth::id())
-                ->select('tbl_post.*')->first())
-            ??
-            (Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
-                ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
-                ->where('tbl_post.id', '=', $request->id)
-                ->where('tbl_topic.mod_id', '=', Auth::id())
-                ->select('tbl_post.*')->first());
+        if (Auth::user()->level == 1) {
+            $post =
+                (Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
+                    ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
+                    ->where('tbl_post.id', '=', $request->id . '_UPDATE')
+                    ->where('tbl_topic.mod_id', '=', Auth::id())
+                    ->select('tbl_post.*')->first())
+                ??
+                (Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
+                    ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
+                    ->where('tbl_post.id', '=', $request->id)
+                    ->where('tbl_topic.mod_id', '=', Auth::id())
+                    ->select('tbl_post.*')->first());
+        } elseif (Auth::user()->level == 2) {
+            $post =
+                (Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
+                    ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
+                    ->where('tbl_post.id', '=', $request->id . '_UPDATE')
+                    ->select('tbl_post.*')->first())
+                ??
+                (Post::leftJoin('tbl_category', 'tbl_category.id', '=', 'tbl_post.category_id')
+                    ->leftJoin('tbl_topic', 'tbl_topic.id', '=', 'tbl_category.topic_id')
+                    ->where('tbl_post.id', '=', $request->id)
+                    ->select('tbl_post.*')->first());
+        }
+
         if (!$post) {
             return abort(404);
         }

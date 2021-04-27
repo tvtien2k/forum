@@ -205,7 +205,7 @@
             <div class="modal fade" id="action" tabindex="-1" aria-labelledby="exampleModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content">
+                    <div class="modal-content" style="width: 50%">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -213,22 +213,13 @@
                         </div>
                         @csrf
                         <div class="modal-body">
-                            <form method="get" action="admin/manage-user/ban_in_client/">
-                                @csrf
-                                <input class="author" type="hidden" name="author">
-                                <div class="row">
-                                    <div class="col text-center">
-                                        <button type="submit" class="btn btn-primary text-center">Ban user</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <form method="get" action="admin/manage-post/delete/">
+                            <form style="margin-top: 10px" method="get" action="admin/manage-post/delete/">
                                 @csrf
                                 <input class="id" type="hidden" name="id">
                                 <input class="iscmt" type="hidden" name="iscmt">
                                 <div class="row">
                                     <div class="col text-center">
-                                        <button onclick="return confirm('Do you really want to delete the comment, press ok ' +
+                                        <button style="width: 83px" onclick="return confirm('Do you really want to delete the comment, press ok ' +
                              ' to confirm?');" class="btn btn-primary">Delete
                                         </button>
                                     </div>
@@ -323,7 +314,6 @@
             plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
             toolbar_mode: 'floating',
         });
-
         function showFormCmt(btn_id) {
             var forms = document.getElementsByClassName("form-reply");
             for (var i = 0; i < forms.length; i++) {
@@ -331,6 +321,13 @@
             }
             var id = btn_id.slice(10);
             document.getElementById('form-reply-' + id).removeAttribute('hidden');
+        }
+    </script>
+    <script>
+        function cf() {
+            var date = new Date()
+            date.setDate(date.getDate() + 2)
+            confirm('Account will be banned until date: '+date);
         }
     </script>
 @endsection

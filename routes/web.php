@@ -125,7 +125,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('get-category/{topic_id}', [\App\Http\Controllers\Admin\PostController::class, 'getCategory']);
         Route::get('list/my-post', [\App\Http\Controllers\Admin\PostController::class, 'getMyPost']);
         Route::get('list/post-i-manage/{id?}', [\App\Http\Controllers\Admin\PostController::class, 'showPost']);
-        Route::post('list/post-i-manage/{id?}', [\App\Http\Controllers\Admin\PostController::class, 'filter']);
+        Route::post('fillter/{id?}', [\App\Http\Controllers\Admin\PostController::class, 'filter']);
         Route::get('/add', [\App\Http\Controllers\Admin\PostController::class, 'getAddPost']);
         Route::post('/add', [\App\Http\Controllers\Admin\PostController::class, 'postAddPost']);
         Route::get('/edit/{id}', [\App\Http\Controllers\Admin\PostController::class, 'getEditPost']);
@@ -158,13 +158,16 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('post-edit/{idU}', [\App\Http\Controllers\Admin\UserController::class, 'postEdit']);
         Route::post('delete/{idU}', [\App\Http\Controllers\Admin\UserController::class, 'delete']);
         Route::get('view-post/{id}', [\App\Http\Controllers\Admin\UserController::class, 'viewPost']);
-        Route::post('ban/{idUser}', [\App\Http\Controllers\Admin\UserController::class, 'banUser']);
-        Route::get('ban_in_client', [\App\Http\Controllers\Admin\UserController::class, 'banUserInClient']);
+        Route::post('ban/{idUser?}', [\App\Http\Controllers\Admin\UserController::class, 'banUser']);
+        Route::get('ban_in_client', [\App\Http\Controllers\Admin\UserController::class, 'banUser']);
     });
     Route::prefix('manage-report')->group(function () {
         Route::get('view', [\App\Http\Controllers\Admin\ReportController::class, 'viewReport']);
         Route::get('view-post/{id}', [\App\Http\Controllers\Admin\ReportController::class, 'viewPost']);
-        Route::post('month', [\App\Http\Controllers\Admin\ReportController::class, 'getMonth']);
+        Route::post('filter',[\App\Http\Controllers\Admin\ReportController::class,'getFilter']);
+        Route::post('delete/{id}',[\App\Http\Controllers\Admin\ReportController::class,'delete']);
+        Route::post('view-story-user/{id}',[\App\Http\Controllers\Admin\ReportController::class,'viewStoryUser']);
+        Route::post('delete-all-report/{id}',[\App\Http\Controllers\Admin\ReportController::class,'deleteAllReport']);
 
     });
     Route::prefix('/account')->group(function () {
@@ -174,6 +177,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/forgot-password', [\App\Http\Controllers\Admin\AccountControllers::class, 'getForgotPassword']);
         Route::post('/change-password', [\App\Http\Controllers\Admin\AccountControllers::class, 'postChangePassword']);
     });
+
 
 });
 

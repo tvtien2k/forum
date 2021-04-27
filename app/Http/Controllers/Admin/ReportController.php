@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -13,7 +15,8 @@ class ReportController extends Controller
     {
         $report = Report::whereMonth('created_at', \Carbon\Carbon::now()->month)
             ->orderByRaw('day(created_at) desc')->get();
-        return view('dashboard.pages.admin.report.view', ['report' => $report]);
+        $monthChoose=\Carbon\Carbon::now()->month;
+        return view('dashboard.pages.admin.report.view', ['report' => $report,'monthC' => $monthChoose]);
     }
 
     public function viewPost($id)
@@ -75,6 +78,40 @@ class ReportController extends Controller
             return view('dashboard.pages.admin.report.view', ['report' => $report, 'monthC' => $monthChoose, 'dayC' => $dayChoose]);
         }
 
+
+    }
+    public function delete($id){
+        $report= Report::find($id);
+        $report->delete();
+        return back();
+    }
+    public function viewStoryUser($id){
+        //lay report by $id user
+        $reportAll=Report::join('tbl_post','post_id','=','tbl_post.id')
+            ->join('users','author_id','=','users.id')
+            ->where('users.id','=',$id)
+            ->select('tbl_report.*')
+            ->get();
+        $count_all_post = Post::where('author_id', '=', $id)
+                ->where('status', '!=', 'comment')
+                ->count() ?? 0;
+        $count_report= $reportAll->count();
+        $user= User::find($id);
+        return view('dashboard.pages.admin.report.story-user',['user'=>$user,'reportAll'=>$reportAll,'count_all_post' => $count_all_post
+            ,'count_report'=>$count_report]);
+
+    }
+    public function deleteAllReport($id){
+        $reportAll=Report::join('tbl_post','post_id','=','tbl_post.id')
+            ->join('users','author_id','=','users.id')
+            ->where('users.id','=',$id)
+            ->select('tbl_report.*')
+            ->get();
+        foreach ($reportAll as $r){
+            $reportDelete= Report::find($r->id);
+            $reportDelete->delete();
+        }
+        return $this->viewReport();
 
     }
 }

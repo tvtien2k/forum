@@ -47,10 +47,13 @@ class UserController extends Controller{
         $user->delete();
         return redirect('admin/manage-user/view');
     }
-    public function banUser( Request $request,$id){
+    public function banUser( Request $request,$id=null){
         if($request->datepicker==null){
-            $user= User::find($id);
-            $user->isBan=Carbon::now()->month.'/'.Carbon::now()->day.'/'.Carbon::now()->year;
+            $user= User::find($request->author);
+            $date = date('m/d/Y');
+            $newdate = strtotime ( '+2 day' , strtotime ( $date ) ) ;
+            $newdate = date ( 'm/d/Y' , $newdate );
+            $user->isBan= $newdate;
             $user->save();
             return back()
                 ->with('status', 'Ban successfully!');
@@ -62,15 +65,5 @@ class UserController extends Controller{
             return redirect('admin/manage-user/view');
         }
 
-    }
-    public function banUserInClient(Request $request){
-        $user= User::find($request->author);
-        $date = date('m/d/Y');
-        $newdate = strtotime ( '+2 day' , strtotime ( $date ) ) ;
-        $newdate = date ( 'm/d/Y' , $newdate );
-        $user->isBan= $newdate;
-        $user->save();
-         return back()
-            ->with('status', 'Ban successfully!');
     }
 }
